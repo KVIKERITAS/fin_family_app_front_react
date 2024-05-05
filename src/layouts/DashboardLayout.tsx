@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }: Props) => {
 				<div className='h-screen flex-col justify-between border-e bg-white w-64 hidden md:flex'>
 					<Sidebar />
 				</div>
-				<div className='w-full'>{children}</div>
+				<div className='bg-secondary w-full'>{children}</div>
 			</div>
 		</>
 	)
