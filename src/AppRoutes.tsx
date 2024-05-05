@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoute from './auth/ProtectedRoute'
+import CurrencySetupLayout from './layouts/CurrencySetupLayout'
 import DashboardLayout from './layouts/DashboardLayout'
 import HeroLayout from './layouts/HeroLayout'
 import AuthCallbackPage from './pages/AuthCallbackPage'
+import CurrencySetupPage from './pages/CurrencySetupPage'
 import DashboardPage from './pages/DashboardPage'
 import HomePage from './pages/HomePage'
 import UserProfilePage from './pages/UserProfilePage'
@@ -37,6 +39,15 @@ const AppRoutes = () => {
 						<DashboardLayout>
 							<UserProfilePage />
 						</DashboardLayout>
+					}
+				/>
+
+				<Route
+					path='/currency-setup'
+					element={
+						<CurrencySetupLayout>
+							<CurrencySetupPage />
+						</CurrencySetupLayout>
 					}
 				/>
 			</Route>
