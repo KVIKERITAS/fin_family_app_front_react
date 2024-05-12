@@ -67,7 +67,7 @@ const Sidebar = () => {
 								{currentUser?.name || 'NewUser'}
 							</strong>
 
-							<span> {currentUser?.email} </span>
+							<span>{currentUser?.email}</span>
 						</p>
 					</div>
 				</Link>

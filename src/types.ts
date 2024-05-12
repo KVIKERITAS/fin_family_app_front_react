@@ -3,3 +3,9 @@ export type User = {
 	email: string
 	name: string
 }
+
+export type TransactionCategory = {
+	name: string
+	icon: string
+	type: 'income' | 'expense'
+}
