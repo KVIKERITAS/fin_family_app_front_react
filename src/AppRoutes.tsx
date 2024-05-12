@@ -7,6 +7,7 @@ import AuthCallbackPage from './pages/AuthCallbackPage'
 import CurrencySetupPage from './pages/CurrencySetupPage'
 import DashboardPage from './pages/DashboardPage'
 import HomePage from './pages/HomePage'
+import PersonalFinancePage from './pages/PersonalFinancePage'
 import UserProfilePage from './pages/UserProfilePage'
 
 const AppRoutes = () => {
@@ -29,6 +30,15 @@ const AppRoutes = () => {
 					element={
 						<DashboardLayout>
 							<DashboardPage />
+						</DashboardLayout>
+					}
+				/>
+
+				<Route
+					path='/personal-finance'
+					element={
+						<DashboardLayout>
+							<PersonalFinancePage />
 						</DashboardLayout>
 					}
 				/>

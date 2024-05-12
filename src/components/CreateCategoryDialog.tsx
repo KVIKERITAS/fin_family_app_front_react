@@ -1,6 +1,8 @@
-import CategoryForm from '@/forms/category-form/CategoryForm'
+import { useCreateTransactionCategory } from '@/api/MyTransactionApi'
+import CategoryForm, {
+	CategoryFormData,
+} from '@/forms/category-form/CategoryForm'
 import { cn } from '@/lib/utils'
-import { DialogDescription } from '@radix-ui/react-dialog'
 import { PlusSquare } from 'lucide-react'
 import { useState } from 'react'
 import { TransactionType } from './CreateTransactionDialog'
@@ -8,6 +10,7 @@ import { Button } from './ui/button'
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -19,6 +22,13 @@ type Props = {
 
 const CreateCategoryDialog = ({ type }: Props) => {
 	const [open, setOpen] = useState(false)
+
+	const { createTransactionCategory, isLoading } =
+		useCreateTransactionCategory()
+
+	const onSubmit = (categoryData: CategoryFormData) => {
+		console.log(categoryData)
+	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -49,7 +59,11 @@ const CreateCategoryDialog = ({ type }: Props) => {
 						Categories are used to group your transactions
 					</DialogDescription>
 				</DialogHeader>
-				<CategoryForm />
+				<CategoryForm
+					type={type}
+					onSave={createTransactionCategory}
+					isLoading={isLoading}
+				/>
 			</DialogContent>
 		</Dialog>
 	)
