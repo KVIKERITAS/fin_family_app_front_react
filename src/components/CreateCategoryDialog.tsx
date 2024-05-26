@@ -1,7 +1,5 @@
 import { useCreateTransactionCategory } from '@/api/MyTransactionApi'
-import CategoryForm, {
-	CategoryFormData,
-} from '@/forms/category-form/CategoryForm'
+import CategoryForm from '@/forms/category-form/CategoryForm'
 import { cn } from '@/lib/utils'
 import { PlusSquare } from 'lucide-react'
 import { useState } from 'react'
@@ -25,10 +23,6 @@ const CreateCategoryDialog = ({ type }: Props) => {
 
 	const { createTransactionCategory, isLoading } =
 		useCreateTransactionCategory()
-
-	const onSubmit = (categoryData: CategoryFormData) => {
-		console.log(categoryData)
-	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -63,6 +57,7 @@ const CreateCategoryDialog = ({ type }: Props) => {
 					type={type}
 					onSave={createTransactionCategory}
 					isLoading={isLoading}
+					setOpen={setOpen}
 				/>
 			</DialogContent>
 		</Dialog>

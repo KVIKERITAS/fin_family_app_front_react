@@ -1,9 +1,45 @@
+import { TransactionType } from '@/components/CreateTransactionDialog'
 import { TransactionCategory } from '@/types'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { toast } from 'sonner'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
+export const useGetTransactionCategories = (
+	transactionType: TransactionType,
+) => {
+	const { getAccessTokenSilently } = useAuth0()
+
+	const getTransactionCategories = async () => {
+		const accessToken = await getAccessTokenSilently()
+
+		const response = await fetch(
+			`${API_BASE_URL}/api/my/transaction/category/${transactionType}`,
+			{
+				method: 'GET',
+				headers: {
+					'Authorization': `Bearer ${accessToken}`,
+					'Content-Type': 'application/json',
+				},
+			},
+		)
+
+		if (!response.ok) throw new Error('Failed to get transaction categories')
+
+		return response.json()
+	}
+
+	const {
+		data: transactionCategories,
+		isLoading,
+		error,
+	} = useQuery('fetchTransactionCategories', getTransactionCategories)
+
+	if (error) toast.error(error.toString())
+
+	return { transactionCategories, isLoading }
+}
 
 export const useCreateTransactionCategory = () => {
 	const { getAccessTokenSilently } = useAuth0()
