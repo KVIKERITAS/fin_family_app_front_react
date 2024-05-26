@@ -21,6 +21,7 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircleOff } from 'lucide-react'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -36,18 +37,28 @@ type Props = {
 	type: TransactionType
 	onSave: (categoryData: CategoryFormData) => void
 	isLoading: boolean
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CategoryForm = ({ type, onSave, isLoading }: Props) => {
+const CategoryForm = ({ type, onSave, isLoading, setOpen }: Props) => {
 	const form = useForm<CategoryFormData>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { type },
 	})
 
+	const onSubmit = useCallback(
+		(formData: CategoryFormData) => {
+			form.reset({ name: '', icon: '', type })
+			onSave(formData)
+			setOpen(prev => !prev)
+		},
+		[onSave, setOpen, form, type],
+	)
+
 	return (
 		<>
 			<Form {...form}>
-				<form className='space-y-8' onSubmit={form.handleSubmit(onSave)}>
+				<form className='space-y-8' onSubmit={form.handleSubmit(onSubmit)}>
 					<FormField
 						control={form.control}
 						name='name'
@@ -55,11 +66,11 @@ const CategoryForm = ({ type, onSave, isLoading }: Props) => {
 							<FormItem>
 								<FormLabel>Name</FormLabel>
 								<FormControl>
-									<Input defaultValue={''} {...field} />
+									<Input placeholder='Category' {...field} />
 								</FormControl>
 								<FormMessage />
 								<FormDescription>
-									Select a category for this transaction
+									This is how your category will appear in the app
 								</FormDescription>
 							</FormItem>
 						)}

@@ -1,15 +1,10 @@
-import { useGetMyUser } from '@/api/MyUserApi'
 import CreateTransactionDialog from './CreateTransactionDialog'
 import { Button } from './ui/button'
 
-const DashboardIntro = () => {
-	const { currentUser } = useGetMyUser()
-
+const TransactionButtons = () => {
 	return (
-		<div className='border-b bg-card'>
-			<div className='container flex flex-wrap items-center justify-between gap-6 py-6'>
-				<p className='text-2xl font-bold'>Hello, {currentUser?.name}! 👋</p>
-
+		<div>
+			<div className='container flex flex-wrap items-center gap-6 py-6'>
 				<div className='flex items-center gap-3'>
 					<CreateTransactionDialog
 						trigger={
@@ -40,4 +35,4 @@ const DashboardIntro = () => {
 	)
 }
 
-export default DashboardIntro
+export default TransactionButtons
