@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import TransactionCategoryPicker from './TransactionCategoryPicker'
@@ -37,6 +38,13 @@ const TransactionForm = ({ onSave, isLoading, type }: Props) => {
 			date: new Date(),
 		},
 	})
+
+	const handleCategoryChange = useCallback(
+		(value: string) => {
+			form.setValue('category', value)
+		},
+		[form],
+	)
 
 	return (
 		<Form {...form}>
@@ -69,6 +77,7 @@ const TransactionForm = ({ onSave, isLoading, type }: Props) => {
 						</FormItem>
 					)}
 				/>
+				Transaction:{form.watch('category')}
 				<div className='flex items-center justify-between gap-2'>
 					<FormField
 						control={form.control}
@@ -77,7 +86,10 @@ const TransactionForm = ({ onSave, isLoading, type }: Props) => {
 							<FormItem>
 								<FormLabel>Category</FormLabel>
 								<FormControl>
-									<TransactionCategoryPicker type={type} />
+									<TransactionCategoryPicker
+										type={type}
+										onChange={handleCategoryChange}
+									/>
 								</FormControl>
 								<FormDescription>
 									Select a category for this transaction
