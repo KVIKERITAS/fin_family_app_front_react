@@ -9,6 +9,7 @@ import DashboardPage from './pages/DashboardPage'
 import HomePage from './pages/HomePage'
 import PersonalFinancePage from './pages/PersonalFinancePage'
 import UserProfilePage from './pages/UserProfilePage'
+import CommitmentsPage from "./pages/CommitmentsPage";
 
 const AppRoutes = () => {
 	return (
@@ -43,6 +44,14 @@ const AppRoutes = () => {
 					}
 				/>
 
+				<Route
+					path='/commitments'
+					element={
+						<DashboardLayout>
+							<CommitmentsPage />
+						</DashboardLayout>
+					}
+				/>
 				<Route
 					path='/user-profile'
 					element={

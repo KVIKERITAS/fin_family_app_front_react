@@ -1,4 +1,4 @@
-import { Gauge, HandCoins } from 'lucide-react'
+import { Gauge, HandCoins, Handshake } from 'lucide-react'
 
 export const navConfig = [
 	{
@@ -10,5 +10,10 @@ export const navConfig = [
 		title: 'Personal Finance',
 		href: '/personal-finance',
 		icon: Gauge,
+	},
+	{
+		title: 'Commitments',
+		href: '/commitments',
+		icon: Handshake,
 	},
 ]
