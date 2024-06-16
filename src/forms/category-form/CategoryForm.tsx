@@ -106,7 +106,7 @@ const CategoryForm = ({ type, onSave, isLoading, setOpen }: Props) => {
 												)}
 											</Button>
 										</PopoverTrigger>
-										<PopoverContent className='w-full'>
+										<PopoverContent className='relative top-[30px] w-full p-0 border-none rounded-full'>
 											<Picker
 												data={data}
 												onEmojiSelect={(emoji: { native: string }) => {
