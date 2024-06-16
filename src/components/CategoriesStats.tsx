@@ -34,7 +34,43 @@ function CategoriesCard({ type }: Props) {
 								<span className='flex items-center text-gray-400'>
 									Icon Category
 									<span className='ml-2 text-xs text-muted-foreground'>
-										20%
+										50%
+									</span>
+								</span>
+
+								<span className='text-sm font-bold text-gray-500'>50$</span>
+							</div>
+
+							<Progress
+								value={50}
+								indicator={type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'}
+							/>
+						</div>
+
+						<div className='flex flex-col gap-2'>
+							<div className='flex items-center justify-between'>
+								<span className='flex items-center text-gray-400'>
+									Icon Category
+									<span className='ml-2 text-xs text-muted-foreground'>
+										50%
+									</span>
+								</span>
+
+								<span className='text-sm font-bold text-gray-500'>50$</span>
+							</div>
+
+							<Progress
+								value={50}
+								indicator={type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'}
+							/>
+						</div>
+
+						<div className='flex flex-col gap-2'>
+							<div className='flex items-center justify-between'>
+								<span className='flex items-center text-gray-400'>
+									Icon Category
+									<span className='ml-2 text-xs text-muted-foreground'>
+										50%
 									</span>
 								</span>
 
