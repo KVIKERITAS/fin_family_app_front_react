@@ -62,12 +62,11 @@ const Sidebar = () => {
 					/>
 
 					<div>
-						<p className='text-xs'>
-							<strong className='block font-medium'>
-								{currentUser?.name || 'NewUser'}
-							</strong>
-
-							<span>{currentUser?.email}</span>
+						<p className='text-xs w-32 overflow-hidden text-ellipsis font-medium'>
+							{currentUser?.name || 'NewUser'}
+						</p>
+						<p className='text-xs w-32 overflow-hidden text-ellipsis'>
+							{currentUser?.email}
 						</p>
 					</div>
 				</Link>
