@@ -39,7 +39,7 @@ export const useCreateCommitment = () => {
 	} = useMutation(createCommitmentRequest)
 
 	if (isSuccess) {
-		toast.success('Category created!')
+		toast.success('Commitment created!')
 		reset()
 	}
 
