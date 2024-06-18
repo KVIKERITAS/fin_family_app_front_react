@@ -25,4 +25,4 @@ export type NewCommitment = {
 export type CommitmentType =
 	| 'Subscriptions'
 	| 'Leasing'
-	| 'Depts-mortgage-study-loans'  
+	| 'Debts-mortgage-study-loans'  
