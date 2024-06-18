@@ -58,7 +58,7 @@ const CommitmentsPage = () => {
 		},
 		{
 			number: 300,
-			description: 'Depts/mortgage/study loans',
+			description: 'Debts/mortgage/study loans',
 			details: [
 				{ label: 'Start Date', value: '01/09/2023' },
 				{ label: 'Company', value: 'Company C' },
