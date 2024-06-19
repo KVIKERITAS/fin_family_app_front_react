@@ -4,7 +4,7 @@ import { Button } from './ui/button'
 const TransactionButtons = () => {
 	return (
 		<div>
-			<div className='container flex flex-wrap items-center gap-6 py-6'>
+			<div className='flex flex-wrap items-center gap-6 py-6'>
 				<div className='flex items-center gap-3'>
 					<CreateTransactionDialog
 						trigger={
