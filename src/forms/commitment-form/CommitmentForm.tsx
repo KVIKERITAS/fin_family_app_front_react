@@ -18,7 +18,7 @@ import {
 	SelectValue,
   } from "@/components/ui/select"
 
-  const FormSchema = z.object({
+const FormSchema = z.object({
     name: z.string(),
     paymentStart: z.coerce.date(),
     commitmentEnds: z.coerce.date(),
@@ -35,7 +35,7 @@ import {
 type CommitmentFormData = z.infer<typeof FormSchema>
 
 type Props = {
-	onSave: (transactionData: CommitmentFormData) => void
+	onSave: (commitmentData: CommitmentFormData) => void
 	isLoading: boolean
 }
 
@@ -45,7 +45,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 	})
 
 	function onSubmit(data: CommitmentFormData) {
-		console.log(JSON.stringify(data, null, 2))
+		onSave(data);
 	}
 
 	return (
@@ -79,7 +79,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 						<FormItem>
 							<FormLabel>Name</FormLabel>
 							<FormControl>
-								<Input defaultValue={''} {...field} />
+								<Input {...field} />
 							</FormControl>
 						</FormItem>
 					)}
@@ -115,7 +115,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 						<FormItem>
 							<FormLabel>Price</FormLabel>
 							<FormControl>
-								<Input defaultValue={0} type='number' {...field} />
+								<Input type='number' {...field} />
 							</FormControl>
 						</FormItem>
 					)}
@@ -148,7 +148,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 						<FormItem>
 							<FormLabel>Fee</FormLabel>
 							<FormControl>
-								<Input defaultValue={0} type='number' {...field} />
+								<Input type='number' {...field} />
 							</FormControl>
 						</FormItem>
 					)}
@@ -172,7 +172,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 						<FormItem>
 							<FormLabel>Initial Payment</FormLabel>
 							<FormControl>
-								<Input defaultValue={0} type='number' {...field} />
+								<Input type='number' {...field} />
 							</FormControl>
 						</FormItem>
 					)}
@@ -184,12 +184,26 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 						<FormItem>
 							<FormLabel>Interest Rate</FormLabel>
 							<FormControl>
-								<Input defaultValue={0} type='number' {...field} />
+								<Input type='number' {...field} />
 							</FormControl>
 						</FormItem>
 					)}
 				/>
-				<Button type='submit'>Save</Button>
+				<FormField
+					control={form.control}
+					name='sumPayLeft'
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Left To Pay</FormLabel>
+							<FormControl>
+								<Input type='number' {...field} />
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+				<Button type="submit" disabled={isLoading}>
+					{isLoading ? 'Saving...' : 'Save'}
+				</Button>
 			</form>
 		</Form>
 	)
