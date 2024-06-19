@@ -1,4 +1,4 @@
-// import { useCreateCommitment } from '@/api/MyCommitmentsApi'
+import { useCreateCommitment } from '@/api/MyCommitmentsApi'
 import {
 	Dialog,
 	DialogContent,
@@ -7,14 +7,18 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog'
 import CommitmentForm from '@/forms/commitment-form/CommitmentForm'
+import { NewCommitment } from '@/types'
 
 type Props = {
 	trigger: React.ReactNode
 }
 
 const CreateCommitmentDialog = ({ trigger }: Props) => {
-	// TODO: [finApp/commitment-form-submit] - call createCommitment function, passing the formData as props. createCommitment(formData)
-	// const { createCommitment, isLoading } = useCreateCommitment()
+	const { createCommitment, isLoading } = useCreateCommitment()
+	function onCommitmentSave(formData: NewCommitment) {
+		console.log(formData)
+		createCommitment(formData)
+	}
 
 	return (
 		<Dialog>
@@ -23,7 +27,7 @@ const CreateCommitmentDialog = ({ trigger }: Props) => {
 				<DialogHeader>
 					<DialogTitle>Create a new commitment</DialogTitle>
 				</DialogHeader>
-				<CommitmentForm onSave={() => {}} isLoading={true} />
+				<CommitmentForm onSave={onCommitmentSave} isLoading={isLoading}  />
 			</DialogContent>
 		</Dialog>
 	)
