@@ -6,8 +6,9 @@ const DashboardIntro = () => {
 	const { currentUser } = useGetMyUser()
 
 	return (
-		<div className='border-b bg-card'>
-			<div className='container flex flex-wrap items-center justify-end py-6'>
+		<div className='container flex w-full flex-col gap-2 py-3 sm:py-6'>
+			<div className='flex flex-col gap-4 items-center justify-between sm:flex-row'>
+				<h2 className='text-3xl font-bold pt-4 sm:pt-0'>Commitments</h2>
 				<CreateCommitmentDialog
 					trigger={
 						<Button
