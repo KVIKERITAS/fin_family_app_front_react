@@ -1,5 +1,7 @@
+import SingleCommitmentCard from '@/components/CommitmentsComponents/SingleCommitmentCard'
 import UpperBanner from '@/components/CommitmentsComponents/UpperBanner'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -11,24 +13,20 @@ import { useState } from 'react'
 const timePeriods = ['This Year', 'This Quarter', 'This Month']
 
 const CollapsibleProject = ({ projectNumber, description, details }) => (
-	<Collapsible className='w-full'>
-		<CollapsibleTrigger asChild>
-			<div className='flex justify-center items-center space-x-2 cursor-pointer'>
-				<span className='font-bold text-xl'>
-					{description} - {projectNumber} eur.
-				</span>
-				<ChevronsUpDown className='h-4 w-4' />
-			</div>
-		</CollapsibleTrigger>
-		<CollapsibleContent className='p-2 flex justify-center'>
-			<div className='flex space-x-4'>
-				{details.map((detail, index) => (
-					<span key={index}>
-						{detail.label}: {detail.value}
+	<Collapsible className='w-full container'>
+		<Card className='w-full py-4 my-2 px-7'>
+			<CollapsibleTrigger asChild>
+				<div className='h-12 flex justify-between items-center space-x-2 cursor-pointer pt-3'>
+					<span className='text-l font-semibold text-muted-foreground sm:text-2xl'>
+						{description} - {projectNumber} eur.
 					</span>
-				))}
-			</div>
-		</CollapsibleContent>
+					<ChevronsUpDown className='h-4 w-4 text-muted-foreground sm:h-6 sm:w-6' />
+				</div>
+			</CollapsibleTrigger>
+			<CollapsibleContent className='py-2 flex justify-start'>
+				<SingleCommitmentCard  commitmentInfo={details} />
+			</CollapsibleContent>
+		</Card>
 	</Collapsible>
 )
 
@@ -104,7 +102,7 @@ const CommitmentsPage = () => {
 				</div>
 				<div className='flex items-center'>
 					<input type='checkbox' id='commitments' className='mr-2' />
-					<label htmlFor='commitments' className='text-gray-700'>
+					<label htmlFor='commitments' className='text-muted-foreground'>
 						Commitments ends
 					</label>
 				</div>
