@@ -19,17 +19,17 @@ import {
   } from "@/components/ui/select"
 
 const FormSchema = z.object({
+	type: z.union([z.literal('Subscriptions'), z.literal('Leasing'), z.literal('Debts'), z.literal('Mortgage'), z.literal('Insurance')]),
     name: z.string(),
     paymentStart: z.coerce.date(),
     commitmentEnds: z.coerce.date(),
-    price: z.coerce.number().positive().multipleOf(0.01),
+    // price: z.coerce.number().positive().multipleOf(0.01), //deleted in form for now, because there is no such field in backend model
     feeType: z.union([z.literal('month'), z.literal('quarter'), z.literal('year')]),
     paymentDate: z.coerce.date(),
     fee: z.coerce.number().positive().multipleOf(0.01),
-    initialPayment: z.coerce.number().nonnegative().multipleOf(0.01),
-    interestRate: z.coerce.number().nonnegative().multipleOf(0.01),
-    sumPayLeft: z.coerce.number().nonnegative().multipleOf(0.01),
-    type: z.union([z.literal('Subscriptions'), z.literal('Leasing'), z.literal('Debts-mortgage-study-loans')]),
+    initialPayment: z.coerce.number().nonnegative().multipleOf(0.01).optional(),
+    interestRate: z.coerce.number().nonnegative().multipleOf(0.01).optional(),
+    sumPayLeft: z.coerce.number().nonnegative().multipleOf(0.01).optional(),
 })
 
 type CommitmentFormData = z.infer<typeof FormSchema>
@@ -44,15 +44,18 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 		resolver: zodResolver(FormSchema),
 	})
 
+	const { control, handleSubmit, watch } = form
+	const selectedType = watch('type')
+
 	function onSubmit(data: CommitmentFormData) {
 		onSave(data);
 	}
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+			<form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
 				<FormField
-					control={form.control}
+					control={control}
 					name="type"
 					render={({ field }) => (
 						<FormItem>
@@ -66,14 +69,16 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 								<SelectContent>
 									<SelectItem value="Subscriptions">Subscriptions</SelectItem>
 									<SelectItem value="Leasing">Leasing</SelectItem>
-									<SelectItem value="Debts-mortgage-study-loans">Debts/mortgage/study loans</SelectItem>
+									<SelectItem value="Debts">Debts</SelectItem>
+									<SelectItem value="Mortgage">Mortgage</SelectItem>
+									<SelectItem value="Insurance">Insurance</SelectItem>
 								</SelectContent>
 							</Select>
 						</FormItem>
 					)}
 				/>
 				<FormField
-					control={form.control}
+					control={control}
 					name='name'
 					render={({ field }) => (
 						<FormItem>
@@ -85,7 +90,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 					)}
 				/>
 				<FormField
-					control={form.control}
+					control={control}
 					name='paymentStart'
 					render={({ field }) => (
 						<FormItem>
@@ -97,7 +102,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 					)}
 				/>
                 <FormField
-					control={form.control}
+					control={control}
 					name='commitmentEnds'
 					render={({ field }) => (
 						<FormItem>
@@ -108,20 +113,8 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 						</FormItem>
 					)}
 				/>
-                <FormField
-					control={form.control}
-					name='price'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Price</FormLabel>
-							<FormControl>
-								<Input type='number' {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
 				<FormField
-					control={form.control}
+					control={control}
 					name="feeType"
 					render={({ field }) => (
 						<FormItem>
@@ -142,7 +135,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 					)}
 				/>
                 <FormField
-					control={form.control}
+					control={control}
 					name='fee'
 					render={({ field }) => (
 						<FormItem>
@@ -154,7 +147,7 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 					)}
 				/>
 				<FormField
-					control={form.control}
+					control={control}
 					name='paymentDate'
 					render={({ field }) => (
 						<FormItem>
@@ -165,42 +158,48 @@ const CommitmentForm = ({ onSave, isLoading }: Props) => {
 						</FormItem>
 					)}
 				/>
-                <FormField
-					control={form.control}
-					name='initialPayment'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Initial Payment</FormLabel>
-							<FormControl>
-								<Input type='number' {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-                <FormField
-					control={form.control}
-					name='interestRate'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Interest Rate</FormLabel>
-							<FormControl>
-								<Input type='number' {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name='sumPayLeft'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Left To Pay</FormLabel>
-							<FormControl>
-								<Input type='number' {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
+                {selectedType === 'Mortgage' && 
+					<FormField
+						control={control}
+						name='initialPayment'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Initial Payment</FormLabel>
+								<FormControl>
+									<Input type='number' {...field} />
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+				}
+                {selectedType === 'Mortgage' &&
+					<FormField
+						control={control}
+						name='interestRate'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Interest Rate</FormLabel>
+								<FormControl>
+									<Input type='number' {...field} />
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+				}
+				{selectedType === 'Mortgage' &&
+					<FormField
+						control={control}
+						name='sumPayLeft'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Left To Pay</FormLabel>
+								<FormControl>
+									<Input type='number' {...field} />
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+				}
 				<Button type="submit" disabled={isLoading}>
 					{isLoading ? 'Saving...' : 'Save'}
 				</Button>
