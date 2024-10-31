@@ -33,7 +33,7 @@ const FormSchema = z.object({
   fee: z.coerce.number().positive().multipleOf(0.01),
   commitmentStart: z.coerce.date(),
   commitmentEnds: z.coerce.date().optional(),
-  // TODO add initial_payment for leasing
+  initialPayment: z.coerce.number().optional(), // only for leasing
 });
 
 type LeasingAndDebtsFormData = z.infer<typeof FormSchema>;
@@ -45,69 +45,70 @@ type Props = {
 };
 
 const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
-  const form = useForm<LeasingAndDebtsFormData>({
-    resolver: zodResolver(FormSchema),
-  });
+    const form = useForm<LeasingAndDebtsFormData>({
+        resolver: zodResolver(FormSchema),
+    });
 
-  const { control, handleSubmit, watch, setValue } = form;
-  const currentDate = new Date().toISOString().split("T")[0];
-  const feeType = watch("feeType");
-  const fullSum = watch("fullSum");
-  const commitmentEnds = watch("commitmentEnds");
-  const commitmentStart = watch("commitmentStart");
-  const fee = watch("fee");
+    const { control, handleSubmit, watch, setValue } = form;
+    const currentDate = new Date().toISOString().split("T")[0];
+    const feeType = watch("feeType");
+    const fullSum = watch("fullSum");
+    const initialPayment = watch("initialPayment") || 0;
+    const commitmentEnds = watch("commitmentEnds");
+    const commitmentStart = watch("commitmentStart");
+    const fee = watch("fee");
 
-  // Calculate and set the fee based on fullSum, feeType, commitmentStart, and commitmentEnds
-//   useEffect(() => {
-// 	if (!(commitmentStart || feeType === "all-at-once") || !commitmentEnds || fullSum <= 0 || !feeType ) { return; }
+    // Calculate and set the fee based on fullSum, feeType, interestRate, commitmentStart, and commitmentEnds
+    useEffect(() => {
+        if (!(commitmentStart || feeType === "all-at-once") || !commitmentEnds || fullSum <= 0 || !feeType ) { return; }
 
-// 	let calculatedFee = 0;
-// 	if ( feeType === "all-at-once" ) { // If pays all at once, fee is full sum
-// 		calculatedFee = fullSum;
-// 	} else { // Calculate the difference in months between commitmentEnds and commitmentStart		
-// 		const startDate = new Date(commitmentStart);
-// 		const endDate = new Date(commitmentEnds);
-// 		const totalMonths = endDate.getFullYear() * 12 + endDate.getMonth() - (startDate.getFullYear() * 12 + startDate.getMonth());
+        let calculatedFee = 0;
+        if ( feeType === "all-at-once" ) { // If pays all at once, fee is full sum
+            calculatedFee = fullSum;
+        } else { // Calculate the difference in months between commitmentEnds and commitmentStart		
+            const startDate = new Date(commitmentStart);
+            const endDate = new Date(commitmentEnds);
+            const totalMonths = endDate.getFullYear() * 12 + endDate.getMonth() - (startDate.getFullYear() * 12 + startDate.getMonth());
 
-// 		if (totalMonths > 0) {
-// 			if (feeType === "month") {
-// 				calculatedFee = fullSum / totalMonths;
-// 			} else if (feeType === "quarter") {
-// 				calculatedFee = fullSum / (totalMonths / 3);
-// 			} else if (feeType === "year") {
-// 				calculatedFee = fullSum / (totalMonths / 12);
-// 			} 
-// 		}
-// 	}
+            if (totalMonths > 0) {
+                if (feeType === "month") {
+                    calculatedFee = fullSum / totalMonths;
+                } else if (feeType === "quarter") {
+                    calculatedFee = fullSum / (totalMonths / 3);
+                } else if (feeType === "year") {
+                    calculatedFee = fullSum / (totalMonths / 12);
+                } 
+            }
+        }
 
-// 	// Update the fee field
-// 	setValue("fee", calculatedFee);	
-// 	// TODO count in interest rate if given
-//   }, [fullSum, feeType, commitmentEnds, commitmentStart]);
+        // Update the fee field
+        setValue("fee", calculatedFee);	
+        // TODO count in interest rate if given
+    }, [fullSum, feeType, commitmentEnds, commitmentStart, setValue]);
 
-	// Calculate and set the commitmentEnds date when the fee changes
-	// useEffect(() => {
-	// 	if (!fee || !commitmentStart || fee <= 0 ) { return; }
+    // Calculate and set the commitmentEnds date when the fee changes
+    useEffect(() => {
+        if (!fee || !commitmentStart || fee <= 0 ) { return; }
+        const commitmentSum = fullSum - initialPayment;
 
-	// 	const startDate = new Date(commitmentStart);
-	// 	let totalMonths = 0;
+        let totalMonths = 0;
+        if (feeType === "month") {
+            totalMonths = commitmentSum / fee;
+        } else if (feeType === "quarter") {
+            totalMonths = (commitmentSum / fee) * 3;
+        } else if (feeType === "year") {
+            totalMonths = (commitmentSum / fee) * 12;
+        }
 
-	// 	if (feeType === "month") {
-	// 	totalMonths = fullSum / fee;
-	// 	} else if (feeType === "quarter") {
-	// 	totalMonths = (fullSum / fee) * 3;
-	// 	} else if (feeType === "year") {
-	// 	totalMonths = (fullSum / fee) * 12;
-	// 	}
+        const startDate = new Date(commitmentStart);
+        const endDate = new Date(startDate);
+        endDate.setMonth(startDate.getMonth() + totalMonths);
+        const formattedEndDate = endDate.toISOString().split('T')[0];
 
-	// 	const endDate = new Date(startDate);
-	// 	endDate.setMonth(startDate.getMonth() + totalMonths);
-	// 	const formattedEndDate = endDate.toISOString().split("T")[0];
-
-	// 	// Update the commitmentEnds field
-	// 	setValue("commitmentEnds", formattedEndDate);
-	// 	// TODO count in interest rate if given
-	// }, [fee]);
+        // Update the commitmentEnds field
+        setValue("commitmentEnds", formattedEndDate);
+        // TODO count in interest rate if given
+    }, [fee]);
 
   function onSubmit(data: LeasingAndDebtsFormData) {
     const newCommitmentData = Object.assign({type: commitmentType}, data);
@@ -131,6 +132,21 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
             </FormItem>
             )}
         />
+        {commitmentType === "Leasing" && (
+            <FormField
+                control={control}
+                name="initialPayment"
+                defaultValue={0}
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Initial Payment</FormLabel>
+                        <FormControl>
+                            <Input type="number" {...field} />
+                        </FormControl>
+                    </FormItem>
+                )}
+            />
+        )}
         <FormField
             control={control}
             name="fullSum"
@@ -186,11 +202,12 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
             <FormField
                 control={control}
                 name="commitmentStart"
+                defaultValue={currentDate}
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Payment Start</FormLabel>
                         <FormControl>
-                            <Input defaultValue={currentDate} type="date" {...field} />
+                            <Input type="date" {...field} />
                         </FormControl>
                     </FormItem>
                 )}

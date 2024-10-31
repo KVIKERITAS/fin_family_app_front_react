@@ -109,11 +109,12 @@ const SubscriptionsAndInsuranceForm = ({commitmentType, onSave, isLoading }: Pro
         <FormField
             control={control}
             name="commitmentStart"
+            defaultValue={currentDate}
             render={({ field }) => (
                 <FormItem>
                 <FormLabel>Payment Start</FormLabel>
                 <FormControl>
-                    <Input defaultValue={currentDate} type="date" {...field} />
+                    <Input type="date" {...field} />
                 </FormControl>
                 </FormItem>
             )}
