@@ -11,15 +11,14 @@ export type TransactionCategory = {
 }
 
 export type NewCommitment = {
-	name: string
 	type: CommitmentType
-	initialPayment: number
-	paymentStart: Date
-	commitmentEnds: Date
-	paymentDate: Date
-	price: number
+	name: string
+	commitmentStart: Date
+	commitmentEnd?: Date
+	fee: number
 	feeType: string
-	interestRate: number
+	interestRate?: number	// only for leasing, debts, mortgage
+	initialPayment?: number // only for leasing and mortgage
 }
 
 export type CommitmentType =
