@@ -33,7 +33,7 @@ const FormSchema = z.object({
   fee: z.coerce.number().positive().multipleOf(0.01),
   commitmentStart: z.coerce.date(),
   commitmentEnds: z.coerce.date().optional(),
-  initialPayment: z.coerce.number().optional(), // only for leasing
+  initialPayment: z.coerce.number().multipleOf(0.01).optional(), // only for leasing
 });
 
 type LeasingAndDebtsFormData = z.infer<typeof FormSchema>;
@@ -53,66 +53,95 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
     const currentDate = new Date().toISOString().split("T")[0];
     const feeType = watch("feeType");
     const fullSum = watch("fullSum");
+    const interestRate = watch("interestRate");
     const initialPayment = watch("initialPayment") || 0;
     const commitmentEnds = watch("commitmentEnds");
     const commitmentStart = watch("commitmentStart");
     const fee = watch("fee");
 
-    // Calculate and set the fee based on fullSum, feeType, interestRate, commitmentStart, and commitmentEnds
     useEffect(() => {
-        if (!(commitmentStart || feeType === "all-at-once") || !commitmentEnds || fullSum <= 0 || !feeType ) { return; }
+        countFee();
+    }, [fullSum, feeType, interestRate, commitmentEnds, commitmentStart]);
 
-        let calculatedFee = 0;
-        if ( feeType === "all-at-once" ) { // If pays all at once, fee is full sum
-            calculatedFee = fullSum;
-        } else { // Calculate the difference in months between commitmentEnds and commitmentStart		
-            const startDate = new Date(commitmentStart);
-            const endDate = new Date(commitmentEnds);
-            const totalMonths = endDate.getFullYear() * 12 + endDate.getMonth() - (startDate.getFullYear() * 12 + startDate.getMonth());
-
-            if (totalMonths > 0) {
-                if (feeType === "month") {
-                    calculatedFee = fullSum / totalMonths;
-                } else if (feeType === "quarter") {
-                    calculatedFee = fullSum / (totalMonths / 3);
-                } else if (feeType === "year") {
-                    calculatedFee = fullSum / (totalMonths / 12);
-                } 
-            }
-        }
-
-        // Update the fee field
-        setValue("fee", calculatedFee);	
-        // TODO count in interest rate if given
-    }, [fullSum, feeType, commitmentEnds, commitmentStart, setValue]);
-
-    // Calculate and set the commitmentEnds date when the fee changes
     useEffect(() => {
-        if (!fee || !commitmentStart || fee <= 0 ) { return; }
-        const commitmentSum = fullSum - initialPayment;
-
-        let totalMonths = 0;
-        if (feeType === "month") {
-            totalMonths = commitmentSum / fee;
-        } else if (feeType === "quarter") {
-            totalMonths = (commitmentSum / fee) * 3;
-        } else if (feeType === "year") {
-            totalMonths = (commitmentSum / fee) * 12;
-        }
-
-        const startDate = new Date(commitmentStart);
-        const endDate = new Date(startDate);
-        endDate.setMonth(startDate.getMonth() + totalMonths);
-        const formattedEndDate = endDate.toISOString().split('T')[0];
-
-        // Update the commitmentEnds field
-        setValue("commitmentEnds", formattedEndDate);
-        // TODO count in interest rate if given
+        // countCommitmentEndDate();
     }, [fee]);
 
   function onSubmit(data: LeasingAndDebtsFormData) {
     const newCommitmentData = Object.assign({type: commitmentType}, data);
     onSave(newCommitmentData);
+  }
+
+  // Calculate and set the fee based on feeType, fullSum, initialPayment, interestRate, commitmentStart, commitmentEnds
+  function countFee() {
+    if (!(commitmentStart || feeType === "all-at-once") || !commitmentEnds || fullSum <= 0 || !feeType ) { return; }
+
+    let calculatedFee = 0;
+    if ( feeType === "all-at-once" ) { // If pays all at once, fee is full sum
+        calculatedFee = fullSum * (1 + ((interestRate || 0) / 100));
+    } else { // Calculate the difference in months between commitmentEnds and commitmentStart		
+        const startDate = new Date(commitmentStart);
+        const endDate = new Date(commitmentEnds);
+        const totalMonths = endDate.getFullYear() * 12 + endDate.getMonth() - (startDate.getFullYear() * 12 + startDate.getMonth());
+
+        const sumToPay = fullSum - (initialPayment || 0);
+        let rate = 0; // recalculated interest rate
+        let howManyPayments = 0;
+
+        if (totalMonths > 0) {
+            if (feeType === "month") {
+                rate = (interestRate || 0) / 12 / 100;
+                howManyPayments = totalMonths;
+            } else if (feeType === "quarter") {
+                rate = (interestRate || 0) / 4 / 100;
+                howManyPayments = totalMonths / 3; // number of quarters - we pay every three months
+            } else if (feeType === "year") {
+                rate = (interestRate || 0) / 100;
+                howManyPayments = totalMonths / 12; // number of years
+            } 
+
+            if (rate) {
+                calculatedFee = sumToPay * rate * (1 + rate) ** howManyPayments / ((1 + rate) ** howManyPayments - 1); // annuity formula
+            } else {
+                calculatedFee = sumToPay / howManyPayments;
+            }
+        }
+    }
+    // Update the fee field
+    setValue("fee", calculatedFee.toFixed(2));	
+  }
+
+  // Calculate and set the CommitmentEnd Date based on fee, feeType, fullSum, initialPayment, interestRate, commitmentStart
+  function countCommitmentEndDate() {
+    if (!fee || !commitmentStart || fee <= 0 ) { return; }
+    const payment = Number(fee);
+    const sumToPay = (fullSum || 0) - (initialPayment || 0);
+    if (sumToPay <= 0) { return; }
+    let rate = 0; // recalculated interest rate
+    let howManyMonthsBetweenPayments = 1;
+
+    if (feeType === "month") {
+        rate = (interestRate || 0) / 12 / 100;
+        howManyMonthsBetweenPayments = 1;
+    } else if (feeType === "quarter") {
+        rate = (interestRate || 0) / 4 / 100;
+        howManyMonthsBetweenPayments = 3;
+    } else if (feeType === "year") {
+        rate = (interestRate || 0) / 100;
+        howManyMonthsBetweenPayments = 12;
+    } 
+
+    let timePeriods = sumToPay / payment;
+    if (rate) { timePeriods = Math.log(payment / (payment - sumToPay * rate)) / Math.log(1 + rate); } // rearranged annuity formula 
+
+    const totalMonths = timePeriods * howManyMonthsBetweenPayments;
+    const startDate = new Date(commitmentStart);
+    const endDate = new Date(startDate);
+    endDate.setMonth(startDate.getMonth() + totalMonths);
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+
+    // Update the commitmentEnds field
+    setValue("commitmentEnds", formattedEndDate);
   }
 
   return (
@@ -190,9 +219,9 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
                         <SelectItem value="month">Monthly</SelectItem>
                         <SelectItem value="quarter">Quarterly</SelectItem>
                         <SelectItem value="year">Yearly</SelectItem>
-                        {/* TODO {(selectedType === "Debts") && (
-                        <SelectItem value="all-at-once">All at once</SelectItem>
-                        )} */}
+                        {(commitmentType === "Debts") && (
+                            <SelectItem value="all-at-once">All at once</SelectItem>
+                        )}
                     </SelectContent>
                 </Select>
             </FormItem>
