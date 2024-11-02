@@ -5,6 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,12 +21,13 @@ import {
 import { CommitmentType, NewCommitment } from "@/types";
 
 const FormSchema = z.object({
-  name: z.string(),
+  name: z
+    .string()
+    .max(30, { message: "Name must be at most 30 characters long" }),
   feeType: z.union([
     z.literal("month"),
     z.literal("quarter"),
     z.literal("year"),
-    z.literal("all-at-once"),
   ]),
   fee: z.coerce.number().positive().multipleOf(0.01),
   commitmentStart: z.coerce.date(),
@@ -57,80 +59,85 @@ const SubscriptionsAndInsuranceForm = ({commitmentType, onSave, isLoading }: Pro
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-3 mt-3">
-        <FormField
+          <FormField
             control={control}
             name="name"
             defaultValue=""
             render={({ field }) => (
-            <FormItem>
+              <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                    <Input {...field} />
+                  <Input {...field} />
                 </FormControl>
-            </FormItem>
+                <FormMessage />
+              </FormItem>
             )}
-        />
-        <FormField
+          />
+          <FormField
             control={control}
             name="feeType"
             render={({ field }) => (
-                <FormItem>
-                    <FormLabel>Fee Type</FormLabel>
-                    <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        >
-                        <FormControl>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select fee type" />
-                            </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            <SelectItem value="month">Monthly</SelectItem>
-                            <SelectItem value="quarter">Quarterly</SelectItem>
-                            <SelectItem value="year">Yearly</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </FormItem>
+              <FormItem>
+                <FormLabel>Fee Type</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select fee type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="month">Monthly</SelectItem>
+                    <SelectItem value="quarter">Quarterly</SelectItem>
+                    <SelectItem value="year">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
             )}
-        />
-        <FormField
+          />
+          <FormField
             control={control}
             name="fee"
+            defaultValue={0}
             render={({ field }) => (
-            <FormItem>
+              <FormItem>
                 <FormLabel>Fee</FormLabel>
                 <FormControl>
-                    <Input defaultValue={0} type="number" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
-            </FormItem>
+                <FormMessage />
+              </FormItem>
             )}
-        />
-        <FormField
+          />
+          <FormField
             control={control}
             name="commitmentStart"
             defaultValue={currentDate}
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Payment Start</FormLabel>
                 <FormControl>
-                    <Input type="date" {...field} />
+                  <Input type="date" {...field} />
                 </FormControl>
-                </FormItem>
+                <FormMessage />
+              </FormItem>
             )}
-        />
-        <FormField
+          />
+          <FormField
             control={control}
             name="commitmentEnds"
             render={({ field }) => (
-            <FormItem>
+              <FormItem>
                 <FormLabel>Commitment End</FormLabel>
                 <FormControl>
-                <Input type="date" {...field} />
+                  <Input type="date" {...field} />
                 </FormControl>
-            </FormItem>
+                <FormMessage />
+              </FormItem>
             )}
-        />
+          />
         </div>
         <Button type="submit" disabled={isLoading} className="mt-6">
           {isLoading ? "Saving..." : "Save"}

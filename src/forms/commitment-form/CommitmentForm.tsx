@@ -37,8 +37,10 @@ const CommitmentForm = () => {
           <SelectItem value="Mortgage">Mortgage</SelectItem>
         </SelectContent>
       </Select>
-      { (selectedType === "Subscriptions" || selectedType === "Insurance") && <SubscriptionsAndInsuranceForm commitmentType={selectedType} onSave={onCommitmentSave} isLoading={isLoading} />}
-      { (selectedType === "Leasing" || selectedType === "Debts") && <LeasingAndDebtsForm  commitmentType={selectedType} onSave={onCommitmentSave} isLoading={isLoading} />}
+      { selectedType === "Subscriptions" && <SubscriptionsAndInsuranceForm commitmentType={selectedType} onSave={onCommitmentSave} isLoading={isLoading} />}
+      { selectedType === "Insurance" && <SubscriptionsAndInsuranceForm commitmentType={selectedType} onSave={onCommitmentSave} isLoading={isLoading} />}
+      { selectedType === "Leasing" && <LeasingAndDebtsForm  commitmentType={selectedType} onSave={onCommitmentSave} isLoading={isLoading} />}
+      { selectedType === "Debts" && <LeasingAndDebtsForm  commitmentType={selectedType} onSave={onCommitmentSave} isLoading={isLoading} />}
     </>
   );
 };
