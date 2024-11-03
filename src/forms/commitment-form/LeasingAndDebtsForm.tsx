@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -7,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -18,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect } from "react";
 import { CommitmentType, NewCommitment } from "@/types";
 
 const FormSchema = z.object({
@@ -38,6 +39,7 @@ const FormSchema = z.object({
   commitmentStart: z.coerce.date(),
   commitmentEnds: z.coerce.date().optional(),
   initialPayment: z.coerce.number().multipleOf(0.01).optional(), // only for leasing
+  fieldForInput: z.string() // for radiobutton - we let choose for input one of these: fee or commitment_end. Other is automatically calculated
 });
 
 type LeasingAndDebtsFormData = z.infer<typeof FormSchema>;
@@ -61,15 +63,19 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
   const initialPayment = watch("initialPayment") || 0;
   const commitmentEnds = watch("commitmentEnds");
   const commitmentStart = watch("commitmentStart");
+  const fieldForInput = watch("fieldForInput");  
   const fee = watch("fee");
 
-  useEffect(() => {
-    countFee();
-  }, [fullSum, feeType, interestRate, commitmentEnds, commitmentStart]);
+  const [errorMsgForFee, setErrorMsgForFee] = useState("");
+  const [errorMsgForCommitmentEnd, setErrorMsgForCommitmentEnd] = useState("");
+
+  useEffect(() => { 
+    if (fieldForInput === "commitment_end") { countFee(); }
+  }, [commitmentEnds, feeType, fullSum, initialPayment, interestRate, commitmentStart]);
 
   useEffect(() => {
-    // countCommitmentEndDate();
-  }, [fee]);
+    if (fieldForInput === "fee") { countCommitmentEndDate(); }
+  }, [fee, feeType, fullSum, initialPayment, interestRate, commitmentStart]);
 
   function onSubmit(data: LeasingAndDebtsFormData) {
     const newCommitmentData = Object.assign({type: commitmentType}, data);
@@ -78,7 +84,18 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
 
   // Calculate and set the fee based on feeType, fullSum, initialPayment, interestRate, commitmentStart, commitmentEnds
   function countFee() {
-    if (!(commitmentStart || feeType === "all-at-once") || !commitmentEnds || fullSum <= 0 || !feeType ) { return; }
+    if (!commitmentEnds) {
+      return;
+    } else if (!fullSum) {
+      setErrorMsgForFee("Enter full sum");
+      return;
+    } else if (!feeType) {
+      setErrorMsgForFee("Enter fee type");
+      return;
+    } else if (!commitmentStart && feeType !== "all-at-once") { // for feeType "all-at-once" commitmentStart is unnecessary
+      setErrorMsgForFee("Enter commitment start");
+      return;
+    } 
 
     let calculatedFee = 0;
     if ( feeType === "all-at-once" ) { // If pays all at once, fee is full sum
@@ -105,18 +122,32 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
         }
 
         if (rate) {
-                calculatedFee = sumToPay * rate * (1 + rate) ** howManyPayments / ((1 + rate) ** howManyPayments - 1); // annuity formula
+          calculatedFee = sumToPay * rate * (1 + rate) ** howManyPayments / ((1 + rate) ** howManyPayments - 1); // annuity formula
         } else {
           calculatedFee = sumToPay / howManyPayments;
         }
+        // Update the fee field
+        setValue("fee", calculatedFee.toFixed(2));
+      } else {
+        setErrorMsgForFee("Please ensure the end date is after the start date");
       }
     }
-    // Update the fee field
-    setValue("fee", calculatedFee.toFixed(2));
   }
 
   // Calculate and set the CommitmentEnd Date based on fee, feeType, fullSum, initialPayment, interestRate, commitmentStart
   function countCommitmentEndDate() {
+    if (!fee) {
+      return;
+    } else if (!fullSum) {
+      setErrorMsgForCommitmentEnd("Enter full sum");
+      return;
+    } else if (!feeType) {
+      setErrorMsgForCommitmentEnd("Enter fee type");
+      return;
+    } else if (!commitmentStart && feeType !== "all-at-once") { // for feeType "all-at-once" commitmentStart is unnecessary
+      setErrorMsgForCommitmentEnd("Enter commitment start");
+      return;
+    } 
     if (!fee || !commitmentStart || fee <= 0 ) { return; }
     const payment = Number(fee);
     const sumToPay = (fullSum || 0) - (initialPayment || 0);
@@ -142,7 +173,7 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
     const startDate = new Date(commitmentStart);
     const endDate = new Date(startDate);
     endDate.setMonth(startDate.getMonth() + totalMonths);
-    const formattedEndDate = endDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split("T")[0];
 
     // Update the commitmentEnds field
     setValue("commitmentEnds", formattedEndDate);
@@ -253,6 +284,43 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
               )}
             />
           )}
+          {feeType !== "all-at-once" && 
+            <FormField
+              control={control}
+              name="fieldForInput"
+              defaultValue={""}
+              render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel>Please choose which information you know: fee or commitment end date, and we'll calculate the rest</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    className="flex space-x-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="fee" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Fee
+                      </FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="commitment_end" />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        Commitment end
+                      </FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        }
+        { feeType !== "all-at-once" && fieldForInput === "commitment_end" && <>
           <FormField
             control={control}
             name="commitmentEnds"
@@ -266,6 +334,12 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
               </FormItem>
             )}
           />
+          { fee ? 
+            <FormLabel className="flex space-y-3">Fee: {fee || 0}</FormLabel> :
+            <FormMessage>{ errorMsgForFee }</FormMessage>
+          }</>
+        }
+        { feeType !== "all-at-once" && fieldForInput === "fee" && <>
           <FormField
             control={control}
             name="fee"
@@ -280,6 +354,11 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
               </FormItem>
             )}
           />
+          { commitmentEnds ? 
+            <FormLabel className="flex space-y-3">Commitment end: {(new Date(commitmentEnds)).toISOString().split("T")[0]}</FormLabel> :
+            <FormMessage>{ errorMsgForCommitmentEnd }</FormMessage>
+          }</>
+        }
         </div>
         <Button type="submit" disabled={isLoading} className="mt-6">
           {isLoading ? "Saving..." : "Save"}
