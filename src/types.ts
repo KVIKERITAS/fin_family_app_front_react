@@ -13,12 +13,13 @@ export type TransactionCategory = {
 export type NewCommitment = {
 	type: CommitmentType
 	name: string
-	commitmentStart: Date
+	commitmentStart?: Date
 	commitmentEnd?: Date
-	fee: number
+	fee?: number
 	feeType: string
 	interestRate?: number	// only for leasing, debts, mortgage
 	initialPayment?: number // only for leasing and mortgage
+	fieldForInput?: string 	// only in FE for leasing and debts
 }
 
 export type CommitmentType =

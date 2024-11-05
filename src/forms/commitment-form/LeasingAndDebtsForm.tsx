@@ -35,11 +35,31 @@ const FormSchema = z.object({
     z.literal("year"),
     z.literal("all-at-once"),
   ]),
-  fee: z.coerce.number().positive().multipleOf(0.01),
-  commitmentStart: z.coerce.date(),
+  fee: z.coerce.number().positive().multipleOf(0.01).optional(),
+  commitmentStart: z.coerce.date().optional(),
   commitmentEnds: z.coerce.date().optional(),
   initialPayment: z.coerce.number().multipleOf(0.01).optional(), // only for leasing
-  fieldForInput: z.string() // for radiobutton - we let choose for input one of these: fee or commitment_end. Other is automatically calculated
+  fieldForInput: z.string().optional(), // for radiobutton - we let choose for input one of these: fee or commitment_end. Other is automatically calculated
+})
+.refine((data) => {
+  // If feeType is "all-at-once", commitmentStart should be optional and commitmentEnds required
+  if (data.feeType === "all-at-once") {
+    return data.commitmentEnds !== undefined;
+  }
+  return true;
+}, {
+  message: "Please enter commitment end",
+  path: ["commitmentEnds"],
+})
+.refine((data) => {
+  // If feeType is not "all-at-once", then commitmentStart should be required
+  if (data.feeType !== "all-at-once") {
+    return data.commitmentStart !== undefined;
+  }
+  return true;
+}, {
+  message: "Please enter commitment start",
+  path: ["commitmentStart"],
 });
 
 type LeasingAndDebtsFormData = z.infer<typeof FormSchema>;
@@ -78,7 +98,8 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
   }, [fee, feeType, fullSum, initialPayment, interestRate, commitmentStart]);
 
   function onSubmit(data: LeasingAndDebtsFormData) {
-    const newCommitmentData = Object.assign({type: commitmentType}, data);
+    const newCommitmentData: NewCommitment = Object.assign({type: commitmentType}, data);
+    delete newCommitmentData.fieldForInput;
     onSave(newCommitmentData);
   }
 
@@ -284,6 +305,21 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
               )}
             />
           )}
+          {feeType === "all-at-once" &&
+            <FormField
+              control={control}
+              name="commitmentEnds"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Commitment End</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          }
           {feeType !== "all-at-once" && 
             <FormField
               control={control}
@@ -335,7 +371,11 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
             )}
           />
           { fee ? 
-            <FormLabel className="flex space-y-3">Fee: {fee || 0}</FormLabel> :
+            <>
+              <FormLabel className="flex space-y-3">Fee: {fee || 0}</FormLabel>
+              <span className="italic text-muted-foreground text-xs">Please check if commitment fee is correct before saving.</span>
+            </>
+            :
             <FormMessage>{ errorMsgForFee }</FormMessage>
           }</>
         }
@@ -355,7 +395,11 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
             )}
           />
           { commitmentEnds ? 
-            <FormLabel className="flex space-y-3">Commitment end: {(new Date(commitmentEnds)).toISOString().split("T")[0]}</FormLabel> :
+            <>
+              <FormLabel className="flex space-y-3">Commitment end: {(new Date(commitmentEnds)).toISOString().split("T")[0]}</FormLabel>
+              <span className="italic text-muted-foreground text-xs">Please check if commitment end date is correct before saving.</span>
+            </>
+            :
             <FormMessage>{ errorMsgForCommitmentEnd }</FormMessage>
           }</>
         }
