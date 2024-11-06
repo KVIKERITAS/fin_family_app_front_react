@@ -27,7 +27,7 @@ export const useCreateCommitment = () => {
 
 		if (!response.ok) throw new Error('Failed to create commitment')
 
-		return response.json()
+		return response
 	}
 
 	const {
