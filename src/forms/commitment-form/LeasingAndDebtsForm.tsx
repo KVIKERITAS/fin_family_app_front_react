@@ -152,10 +152,17 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
       setErrorMsgForCommitmentEnd("Enter commitment start");
       return;
     } 
-    if (!fee || !commitmentStart || fee <= 0 ) { return; }
-    const payment = Number(fee);
+
+    const payment = Number(fee || 0);
+    if (payment <= 0) { 
+      setErrorMsgForCommitmentEnd("Fee must be greater than zero");
+      return; 
+    }
     const sumToPay = (fullSum || 0) - (initialPayment || 0);
-    if (sumToPay <= 0) { return; }
+    if (sumToPay <= 0) { 
+      setErrorMsgForCommitmentEnd("Sum you need to pay must be greater than zero");
+      return; 
+    }
     let rate = 0; // recalculated interest rate
     let howManyMonthsBetweenPayments = 1;
 
