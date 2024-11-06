@@ -6,18 +6,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from 'react';
-import { useCreateCommitment } from '@/api/MyCommitmentsApi';
 import { NewCommitment } from '@/types';
 import SubscriptionsAndInsuranceForm from "./SubscriptionsAndInsuranceForm";
 import LeasingAndDebtsForm from "./LeasingAndDebtsForm";
 
-const CommitmentForm = () => {
-  const [selectedType, setSelectedType] = useState('');
+type Props = {
+  onCommitmentSave: (commitmentData: NewCommitment) => void;
+  isLoading: boolean;
+};
 
-  const { createCommitment, isLoading } = useCreateCommitment();
-	function onCommitmentSave(formData: NewCommitment) {
-		createCommitment(formData)
-	}
+const CommitmentForm = ({onCommitmentSave, isLoading }: Props) => {
+  const [selectedType, setSelectedType] = useState('');
 
   function onTypeChange(value: string) {
     setSelectedType(value);

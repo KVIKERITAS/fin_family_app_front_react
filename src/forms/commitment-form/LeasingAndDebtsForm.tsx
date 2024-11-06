@@ -37,30 +37,10 @@ const FormSchema = z.object({
   ]),
   fee: z.coerce.number().positive().multipleOf(0.01).optional(),
   commitmentStart: z.coerce.date().optional(),
-  commitmentEnds: z.coerce.date().optional(),
+  commitmentEnds: z.coerce.date(),
   initialPayment: z.coerce.number().multipleOf(0.01).optional(), // only for leasing
-  fieldForInput: z.string().optional(), // for radiobutton - we let choose for input one of these: fee or commitment_end. Other is automatically calculated
+  fieldForInput: z.string().min(1, { message: "Fee and commitment end are required" }), // for radiobutton - we let choose for input one of these: fee or commitment_end. Other is automatically calculated
 })
-.refine((data) => {
-  // If feeType is "all-at-once", commitmentStart should be optional and commitmentEnds required
-  if (data.feeType === "all-at-once") {
-    return data.commitmentEnds !== undefined;
-  }
-  return true;
-}, {
-  message: "Please enter commitment end",
-  path: ["commitmentEnds"],
-})
-.refine((data) => {
-  // If feeType is not "all-at-once", then commitmentStart should be required
-  if (data.feeType !== "all-at-once") {
-    return data.commitmentStart !== undefined;
-  }
-  return true;
-}, {
-  message: "Please enter commitment start",
-  path: ["commitmentStart"],
-});
 
 type LeasingAndDebtsFormData = z.infer<typeof FormSchema>;
 
@@ -100,6 +80,9 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
   function onSubmit(data: LeasingAndDebtsFormData) {
     const newCommitmentData: NewCommitment = Object.assign({type: commitmentType}, data);
     delete newCommitmentData.fieldForInput;
+    if (feeType === "all-at-once") {
+      newCommitmentData.fee = (newCommitmentData.fullSum || 0) - (newCommitmentData.initialPayment || 0)
+    }
     onSave(newCommitmentData);
   }
 
@@ -269,7 +252,14 @@ const LeasingAndDebtsForm = ({commitmentType, onSave, isLoading }: Props) => {
               <FormItem>
                 <FormLabel>Fee Type</FormLabel>
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    if (value === "all-at-once") {
+                      setValue("fieldForInput", "all-at-once");
+                    } else if (fieldForInput === "all-at-once") {
+                      setValue("fieldForInput", "");
+                    }
+                  }}
                   defaultValue={field.value}
                 >
                   <FormControl>

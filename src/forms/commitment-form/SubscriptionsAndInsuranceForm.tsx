@@ -23,7 +23,8 @@ import { CommitmentType, NewCommitment } from "@/types";
 const FormSchema = z.object({
   name: z
     .string()
-    .max(30, { message: "Name must be at most 30 characters long" }),
+    .max(30, { message: "Name must be at most 30 characters long" })
+    .min(1, { message: "Commitment name cannot be empty" }),
   feeType: z.union([
     z.literal("month"),
     z.literal("quarter"),
