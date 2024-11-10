@@ -24,8 +24,8 @@ export type NewCommitment = {
 }
 
 export type CommitmentType =
-	| 'Subscriptions'
-	| 'Leasing'
-	| 'Debts'
-	| 'Mortgage'
-	| 'Insurance'  
+	| 'subscription'
+	| 'lease'
+	| 'debt'
+	| 'insurance'
+	| 'other'
