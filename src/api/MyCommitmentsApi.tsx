@@ -14,7 +14,7 @@ export const useCreateCommitment = () => {
 		console.log(formData)
 
 		const response = await fetch(
-			`${API_BASE_URL}/api/my/commitment/newCommitment/${formData.type}`,
+			`${API_BASE_URL}/api/my/commitment/newCommitment`,
 			{
 				method: 'POST',
 				headers: {
