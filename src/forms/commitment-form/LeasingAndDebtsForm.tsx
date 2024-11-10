@@ -187,9 +187,7 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 		}
 		const sumToPay = (fullSum || 0) - (initialPayment || 0)
 		if (sumToPay <= 0) {
-			setErrorMsgForCommitmentEnd(
-				'Sum you need to pay must be greater than zero',
-			)
+			setErrorMsgForCommitmentEnd('Sum you need to pay must be greater than zero')
 			return
 		}
 		let rate = 0 // recalculated interest rate
@@ -208,9 +206,12 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 
 		let timePeriods = sumToPay / payment
 		if (rate) {
-			timePeriods =
-				Math.log(payment / (payment - sumToPay * rate)) / Math.log(1 + rate)
-		} // rearranged annuity formula
+			if (payment <= sumToPay * rate) {
+				setErrorMsgForCommitmentEnd('The fee is insufficient')
+				return
+			}
+			timePeriods = Math.log(payment / (payment - sumToPay * rate)) / Math.log(1 + rate) // rearranged annuity formula 
+		} 
 
 		const totalMonths = timePeriods * howManyMonthsBetweenPayments
 		const startDate = new Date(commitmentStart)
