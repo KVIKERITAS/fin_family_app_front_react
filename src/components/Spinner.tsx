@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react'
+import type { SVGProps } from 'react';
 
 export function Spinner(props: SVGProps<SVGSVGElement>) {
 	return (
@@ -49,5 +49,5 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
 				</g>
 			</svg>
 		</div>
-	)
+	);
 }

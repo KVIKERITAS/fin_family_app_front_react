@@ -1,10 +1,10 @@
-import MobileTopNav from '@/components/MobileTopNav'
-import Sidebar from '@/components/Sidebar'
-import React from 'react'
+import MobileTopNav from '@/components/MobileTopNav';
+import Sidebar from '@/components/Sidebar';
+import React from 'react';
 
 type Props = {
-	children: React.ReactNode
-}
+	children: React.ReactNode;
+};
 
 const DashboardLayout = ({ children }: Props) => {
 	return (
@@ -17,7 +17,7 @@ const DashboardLayout = ({ children }: Props) => {
 				<div className='bg-secondary w-full'>{children}</div>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default DashboardLayout
+export default DashboardLayout;

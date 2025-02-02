@@ -1,14 +1,14 @@
-import { CurrencyComboBox } from '@/components/CurrencyComboBox'
-import { Button } from '@/components/ui/button'
+import { CurrencyComboBox } from '@/components/CurrencyComboBox';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Link } from 'react-router-dom'
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Link } from 'react-router-dom';
 
 const CurrencySetupPage = () => {
 	return (
@@ -42,7 +42,7 @@ const CurrencySetupPage = () => {
 				Family Finn App
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default CurrencySetupPage
+export default CurrencySetupPage;

@@ -1,6 +1,6 @@
-import CategoriesStats from '@/components/CategoriesStats'
-import StatsCard from '@/components/StatsCard'
-import TransactionButtons from '@/components/TransactionButtons'
+import CategoriesStats from '@/components/CategoriesStats';
+import StatsCard from '@/components/StatsCard';
+import TransactionButtons from '@/components/TransactionButtons';
 
 const PersonalFinancePage = () => {
 	return (
@@ -14,7 +14,7 @@ const PersonalFinancePage = () => {
 				<CategoriesStats />
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default PersonalFinancePage
+export default PersonalFinancePage;

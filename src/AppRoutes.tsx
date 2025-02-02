@@ -1,15 +1,15 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import ProtectedRoute from './auth/ProtectedRoute'
-import CurrencySetupLayout from './layouts/CurrencySetupLayout'
-import DashboardLayout from './layouts/DashboardLayout'
-import HeroLayout from './layouts/HeroLayout'
-import AuthCallbackPage from './pages/AuthCallbackPage'
-import CurrencySetupPage from './pages/CurrencySetupPage'
-import DashboardPage from './pages/DashboardPage'
-import HomePage from './pages/HomePage'
-import PersonalFinancePage from './pages/PersonalFinancePage'
-import UserProfilePage from './pages/UserProfilePage'
-import CommitmentsPage from "./pages/CommitmentsPage";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './auth/ProtectedRoute';
+import CurrencySetupLayout from './layouts/CurrencySetupLayout';
+import DashboardLayout from './layouts/DashboardLayout';
+import HeroLayout from './layouts/HeroLayout';
+import AuthCallbackPage from './pages/AuthCallbackPage';
+import CurrencySetupPage from './pages/CurrencySetupPage';
+import DashboardPage from './pages/DashboardPage';
+import HomePage from './pages/HomePage';
+import PersonalFinancePage from './pages/PersonalFinancePage';
+import UserProfilePage from './pages/UserProfilePage';
+import CommitmentsPage from './pages/CommitmentsPage';
 
 const AppRoutes = () => {
 	return (
@@ -73,7 +73,7 @@ const AppRoutes = () => {
 
 			<Route path='*' element={<Navigate to='/dashboard' />} />
 		</Routes>
-	)
-}
+	);
+};
 
-export default AppRoutes
+export default AppRoutes;

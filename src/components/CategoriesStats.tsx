@@ -1,6 +1,6 @@
-import { Card, CardHeader, CardTitle } from './ui/card'
-import { Progress } from './ui/progress'
-import { ScrollArea } from './ui/scroll-area'
+import { Card, CardHeader, CardTitle } from './ui/card';
+import { Progress } from './ui/progress';
+import { ScrollArea } from './ui/scroll-area';
 
 const CategoriesStats = () => {
 	return (
@@ -8,14 +8,14 @@ const CategoriesStats = () => {
 			<CategoriesCard type='income' />
 			<CategoriesCard />
 		</div>
-	)
-}
+	);
+};
 
-export default CategoriesStats
+export default CategoriesStats;
 
 type Props = {
-	type?: 'income' | 'expense'
-}
+	type?: 'income' | 'expense';
+};
 
 function CategoriesCard({ type }: Props) {
 	return (
@@ -86,5 +86,5 @@ function CategoriesCard({ type }: Props) {
 				</ScrollArea>
 			</div>
 		</Card>
-	)
+	);
 }

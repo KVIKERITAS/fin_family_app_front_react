@@ -1,0 +1,24 @@
+{
+	// Automatically format on save
+	"editor.formatOnSave": true,
+
+	// Use Prettier for formatting
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+
+	// Ensure Prettier uses the project's version of Prettier
+	"prettier.prettierPath": "./node_modules/prettier",
+
+	// Enable ESLint for formatting
+	"eslint.format.enable": true,
+
+	// Use the project's ESLint configuration
+	"eslint.packageManager": "npm",
+
+	// Automatically fix ESLint issues on save (optional)
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "explicit"
+	},
+
+	// Ensure Prettier and ESLint do not conflict by disabling their format settings
+	"eslint.autoFixOnSave": true
+}

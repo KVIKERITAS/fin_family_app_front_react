@@ -1,4 +1,4 @@
-import { Gauge, HandCoins, Handshake } from 'lucide-react'
+import { Gauge, HandCoins, Handshake } from 'lucide-react';
 
 export const navConfig = [
 	{
@@ -16,4 +16,4 @@ export const navConfig = [
 		href: '/commitments',
 		icon: Handshake,
 	},
-]
+];

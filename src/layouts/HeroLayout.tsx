@@ -1,9 +1,9 @@
-import Header from '@/components/Header'
-import React from 'react'
+import Header from '@/components/Header';
+import React from 'react';
 
 type Props = {
-	children: React.ReactNode
-}
+	children: React.ReactNode;
+};
 
 const HeroLayout = ({ children }: Props) => {
 	return (
@@ -12,7 +12,7 @@ const HeroLayout = ({ children }: Props) => {
 
 			<div className='container mx-auto flex-1 py-10'>{children}</div>
 		</div>
-	)
-}
+	);
+};
 
-export default HeroLayout
+export default HeroLayout;

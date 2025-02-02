@@ -1,16 +1,16 @@
-import { useGetMyUser } from '@/api/MyUserApi'
-import { navConfig } from '@/config/Nav'
-import { cn } from '@/lib/utils'
-import { useAuth0 } from '@auth0/auth0-react'
-import { LogOut } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
-import { Button } from './ui/button'
+import { useGetMyUser } from '@/api/MyUserApi';
+import { navConfig } from '@/config/Nav';
+import { cn } from '@/lib/utils';
+import { useAuth0 } from '@auth0/auth0-react';
+import { LogOut } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from './ui/button';
 
 const Sidebar = () => {
-	const { pathname } = useLocation()
-	const { logout } = useAuth0()
+	const { pathname } = useLocation();
+	const { logout } = useAuth0();
 
-	const { currentUser } = useGetMyUser()
+	const { currentUser } = useGetMyUser();
 
 	return (
 		<>
@@ -23,7 +23,7 @@ const Sidebar = () => {
 				</Link>
 
 				<ul className='mt-6 space-y-1'>
-					{navConfig.map(item => (
+					{navConfig.map((item) => (
 						<li key={item.title}>
 							<Link
 								to={item.href}
@@ -72,7 +72,7 @@ const Sidebar = () => {
 				</Link>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default Sidebar
+export default Sidebar;
