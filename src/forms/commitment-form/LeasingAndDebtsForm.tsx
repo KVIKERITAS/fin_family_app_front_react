@@ -97,9 +97,7 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 		);
 		delete newCommitmentData.fieldForInput;
 		if (feeType === 'one_payment') {
-			newCommitmentData.fee =
-				(newCommitmentData.fullSum || 0) -
-				(newCommitmentData.initialPayment || 0);
+			newCommitmentData.fee = (newCommitmentData.fullSum || 0) - (newCommitmentData.initialPayment || 0);
 		}
 		onSave(newCommitmentData);
 	}
@@ -124,15 +122,13 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 		if (feeType === 'one_payment') {
 			// If pays all at once, fee is full sum
 			calculatedFee = fullSum * (1 + (interestRate || 0) / 100);
+			setValue('fee', calculatedFee.toFixed(2));
 		} else {
 			// Calculate the difference in months between commitmentEnds and commitmentStart
+      if (!commitmentStart || !commitmentEnds) { return; }
 			const startDate = new Date(commitmentStart);
 			const endDate = new Date(commitmentEnds);
-			const totalMonths =
-				endDate.getFullYear() * 12 +
-				endDate.getMonth() -
-				(startDate.getFullYear() * 12 + startDate.getMonth());
-
+			const totalMonths = endDate.getFullYear() * 12 + endDate.getMonth() - (startDate.getFullYear() * 12 + startDate.getMonth());
 			const sumToPay = fullSum - (initialPayment || 0);
 			let rate = 0; // recalculated interest rate
 			let howManyPayments = 0;
@@ -149,10 +145,9 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 					howManyPayments = totalMonths / 12; // number of years
 				}
 
+				howManyPayments = Math.ceil(howManyPayments);	// must be whole number
 				if (rate) {
-					calculatedFee =
-						(sumToPay * rate * (1 + rate) ** howManyPayments) /
-						((1 + rate) ** howManyPayments - 1); // annuity formula
+					calculatedFee = (sumToPay * rate * (1 + rate) ** howManyPayments) / ((1 + rate) ** howManyPayments - 1); // annuity formula
 				} else {
 					calculatedFee = sumToPay / howManyPayments;
 				}
@@ -217,6 +212,7 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 		}
 
 		const totalMonths = timePeriods * howManyMonthsBetweenPayments;
+    if ( !commitmentStart ) { return; }
 		const startDate = new Date(commitmentStart);
 		const endDate = new Date(startDate);
 		endDate.setMonth(startDate.getMonth() + totalMonths);
