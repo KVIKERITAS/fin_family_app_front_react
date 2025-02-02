@@ -4,22 +4,22 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/components/ui/select'
-import { NewCommitment } from '@/types'
-import { useState } from 'react'
-import LeasingAndDebtsForm from './LeasingAndDebtsForm'
-import SubscriptionsAndInsuranceForm from './SubscriptionsAndInsuranceForm'
+} from '@/components/ui/select';
+import { NewCommitment } from '@/types';
+import { useState } from 'react';
+import LeasingAndDebtsForm from './LeasingAndDebtsForm';
+import SubscriptionsAndInsuranceForm from './SubscriptionsAndInsuranceForm';
 
 type Props = {
-	onCommitmentSave: (commitmentData: NewCommitment) => void
-	isLoading: boolean
-}
+	onCommitmentSave: (commitmentData: NewCommitment) => void;
+	isLoading: boolean;
+};
 
 const CommitmentForm = ({ onCommitmentSave, isLoading }: Props) => {
-	const [selectedType, setSelectedType] = useState('')
+	const [selectedType, setSelectedType] = useState('');
 
 	function onTypeChange(value: string) {
-		setSelectedType(value)
+		setSelectedType(value);
 	}
 
 	return (
@@ -65,7 +65,7 @@ const CommitmentForm = ({ onCommitmentSave, isLoading }: Props) => {
 				/>
 			)}
 		</>
-	)
-}
+	);
+};
 
 export default CommitmentForm;

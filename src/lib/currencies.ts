@@ -9,6 +9,6 @@ export const Currencies = [
 		label: '$ Dollar',
 		locale: 'en-USD',
 	},
-]
+];
 
-export type Currency = (typeof Currencies)[0]
+export type Currency = (typeof Currencies)[0];

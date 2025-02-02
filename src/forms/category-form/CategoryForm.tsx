@@ -1,7 +1,7 @@
-import { TransactionType } from '@/components/CreateTransactionDialog'
-import LoadingButton from '@/components/LoadingButton'
-import { Button } from '@/components/ui/button'
-import { DialogClose, DialogFooter } from '@/components/ui/dialog'
+import { TransactionType } from '@/components/CreateTransactionDialog';
+import LoadingButton from '@/components/LoadingButton';
+import { Button } from '@/components/ui/button';
+import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
@@ -10,50 +10,50 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from '@/components/ui/popover'
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { CircleOff } from 'lucide-react'
-import { useCallback } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+} from '@/components/ui/popover';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CircleOff } from 'lucide-react';
+import { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const formSchema = z.object({
 	name: z.string().min(3).max(20),
 	icon: z.string().max(20),
 	type: z.enum(['income', 'expense']),
-})
+});
 
-export type CategoryFormData = z.infer<typeof formSchema>
+export type CategoryFormData = z.infer<typeof formSchema>;
 
 type Props = {
-	type: TransactionType
-	onSave: (categoryData: CategoryFormData) => void
-	isLoading: boolean
-	setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
+	type: TransactionType;
+	onSave: (categoryData: CategoryFormData) => void;
+	isLoading: boolean;
+	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 const CategoryForm = ({ type, onSave, isLoading, setOpen }: Props) => {
 	const form = useForm<CategoryFormData>({
 		resolver: zodResolver(formSchema),
 		defaultValues: { type },
-	})
+	});
 
 	const onSubmit = useCallback(
 		(formData: CategoryFormData) => {
-			form.reset({ name: '', icon: '', type })
-			onSave(formData)
-			setOpen(prev => !prev)
+			form.reset({ name: '', icon: '', type });
+			onSave(formData);
+			setOpen((prev) => !prev);
 		},
 		[onSave, setOpen, form, type],
-	)
+	);
 
 	return (
 		<>
@@ -110,7 +110,7 @@ const CategoryForm = ({ type, onSave, isLoading, setOpen }: Props) => {
 											<Picker
 												data={data}
 												onEmojiSelect={(emoji: { native: string }) => {
-													field.onChange(emoji.native)
+													field.onChange(emoji.native);
 												}}
 											/>
 										</PopoverContent>
@@ -138,7 +138,7 @@ const CategoryForm = ({ type, onSave, isLoading, setOpen }: Props) => {
 				</form>
 			</Form>
 		</>
-	)
-}
+	);
+};
 
-export default CategoryForm
+export default CategoryForm;

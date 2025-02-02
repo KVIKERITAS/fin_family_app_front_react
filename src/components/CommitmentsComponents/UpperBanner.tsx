@@ -1,9 +1,9 @@
-import { useGetMyUser } from '@/api/MyUserApi'
-import CreateCommitmentDialog from '@/components/CommitmentsComponents/CreateCommitmentDialog'
-import { Button } from '@/components/ui/button'
+import { useGetMyUser } from '@/api/MyUserApi';
+import CreateCommitmentDialog from '@/components/CommitmentsComponents/CreateCommitmentDialog';
+import { Button } from '@/components/ui/button';
 
 const DashboardIntro = () => {
-	const { currentUser } = useGetMyUser()
+	const { currentUser } = useGetMyUser();
 
 	return (
 		<div className='container flex w-full flex-col gap-2 py-3 sm:py-6'>
@@ -21,7 +21,7 @@ const DashboardIntro = () => {
 				/>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default DashboardIntro
+export default DashboardIntro;

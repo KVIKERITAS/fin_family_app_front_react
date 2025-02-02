@@ -1,10 +1,10 @@
-import { useCreateTransactionCategory } from '@/api/MyTransactionApi'
-import CategoryForm from '@/forms/category-form/CategoryForm'
-import { cn } from '@/lib/utils'
-import { PlusSquare } from 'lucide-react'
-import { useState } from 'react'
-import { TransactionType } from './CreateTransactionDialog'
-import { Button } from './ui/button'
+import { useCreateTransactionCategory } from '@/api/MyTransactionApi';
+import CategoryForm from '@/forms/category-form/CategoryForm';
+import { cn } from '@/lib/utils';
+import { PlusSquare } from 'lucide-react';
+import { useState } from 'react';
+import { TransactionType } from './CreateTransactionDialog';
+import { Button } from './ui/button';
 import {
 	Dialog,
 	DialogContent,
@@ -12,17 +12,17 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from './ui/dialog'
+} from './ui/dialog';
 
 type Props = {
-	type: TransactionType
-}
+	type: TransactionType;
+};
 
 const CreateCategoryDialog = ({ type }: Props) => {
-	const [open, setOpen] = useState(false)
+	const [open, setOpen] = useState(false);
 
 	const { createTransactionCategory, isLoading } =
-		useCreateTransactionCategory()
+		useCreateTransactionCategory();
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -61,7 +61,7 @@ const CreateCategoryDialog = ({ type }: Props) => {
 				/>
 			</DialogContent>
 		</Dialog>
-	)
-}
+	);
+};
 
-export default CreateCategoryDialog
+export default CreateCategoryDialog;

@@ -1,9 +1,9 @@
-import { useAuth0 } from '@auth0/auth0-react'
-import { Link } from 'react-router-dom'
-import { Button } from './ui/button'
+import { useAuth0 } from '@auth0/auth0-react';
+import { Link } from 'react-router-dom';
+import { Button } from './ui/button';
 
 const Header = () => {
-	const { loginWithRedirect } = useAuth0()
+	const { loginWithRedirect } = useAuth0();
 
 	return (
 		<header className='py-6'>
@@ -21,7 +21,7 @@ const Header = () => {
 				</div>
 			</div>
 		</header>
-	)
-}
+	);
+};
 
-export default Header
+export default Header;

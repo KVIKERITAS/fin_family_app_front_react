@@ -1,17 +1,17 @@
-import { NewCommitment } from '@/types'
-import { useAuth0 } from '@auth0/auth0-react'
-import { useMutation } from 'react-query'
-import { toast } from 'sonner'
+import { NewCommitment } from '@/types';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useMutation } from 'react-query';
+import { toast } from 'sonner';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useCreateCommitment = () => {
-	const { getAccessTokenSilently } = useAuth0()
+	const { getAccessTokenSilently } = useAuth0();
 
 	const createCommitmentRequest = async (formData: NewCommitment) => {
-		const accessToken = await getAccessTokenSilently()
+		const accessToken = await getAccessTokenSilently();
 
-		console.log(formData)
+		console.log(formData);
 
 		const response = await fetch(
 			`${API_BASE_URL}/api/my/commitment/newCommitment`,
@@ -23,12 +23,12 @@ export const useCreateCommitment = () => {
 				},
 				body: JSON.stringify(formData),
 			},
-		)
+		);
 
-		if (!response.ok) throw new Error('Failed to create commitment')
+		if (!response.ok) throw new Error('Failed to create commitment');
 
-		return response
-	}
+		return response;
+	};
 
 	const {
 		mutateAsync: createCommitment,
@@ -36,17 +36,17 @@ export const useCreateCommitment = () => {
 		isSuccess,
 		error,
 		reset,
-	} = useMutation(createCommitmentRequest)
+	} = useMutation(createCommitmentRequest);
 
 	if (isSuccess) {
-		toast.success('Commitment created!')
-		reset()
+		toast.success('Commitment created!');
+		reset();
 	}
 
 	if (error) {
-		toast.error(error.toString())
-		reset()
+		toast.error(error.toString());
+		reset();
 	}
 
-	return { createCommitment, isLoading }
-}
+	return { createCommitment, isLoading };
+};

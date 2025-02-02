@@ -1,8 +1,8 @@
-import { MenuIcon } from 'lucide-react'
-import { Link } from 'react-router-dom'
-import Sidebar from './Sidebar'
-import { Button } from './ui/button'
-import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
+import { MenuIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import { Button } from './ui/button';
+import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
 const MobileTopNav = () => {
 	return (
@@ -22,7 +22,7 @@ const MobileTopNav = () => {
 				</SheetContent>
 			</Sheet>
 		</div>
-	)
-}
+	);
+};
 
-export default MobileTopNav
+export default MobileTopNav;

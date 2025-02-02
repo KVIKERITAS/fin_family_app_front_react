@@ -1,5 +1,5 @@
-import CreateTransactionDialog from './CreateTransactionDialog'
-import { Button } from './ui/button'
+import CreateTransactionDialog from './CreateTransactionDialog';
+import { Button } from './ui/button';
 
 const TransactionButtons = () => {
 	return (
@@ -32,7 +32,7 @@ const TransactionButtons = () => {
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default TransactionButtons
+export default TransactionButtons;

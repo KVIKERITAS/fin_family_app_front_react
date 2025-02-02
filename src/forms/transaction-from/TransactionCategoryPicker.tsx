@@ -1,8 +1,8 @@
-import { useGetTransactionCategories } from '@/api/MyTransactionApi'
-import CreateCategoryDialog from '@/components/CreateCategoryDialog'
-import { TransactionType } from '@/components/CreateTransactionDialog'
-import { Spinner } from '@/components/Spinner'
-import { Button } from '@/components/ui/button'
+import { useGetTransactionCategories } from '@/api/MyTransactionApi';
+import CreateCategoryDialog from '@/components/CreateCategoryDialog';
+import { TransactionType } from '@/components/CreateTransactionDialog';
+import { Spinner } from '@/components/Spinner';
+import { Button } from '@/components/ui/button';
 import {
 	Command,
 	CommandEmpty,
@@ -10,35 +10,36 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-} from '@/components/ui/command'
-import { Popover, PopoverContent } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
-import { TransactionCategory } from '@/types'
-import { PopoverTrigger } from '@radix-ui/react-popover'
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { useEffect, useState } from 'react'
+} from '@/components/ui/command';
+import { Popover, PopoverContent } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { TransactionCategory } from '@/types';
+import { PopoverTrigger } from '@radix-ui/react-popover';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 type Props = {
-	type: TransactionType
-	onChange: (value: string) => void
-}
+	type: TransactionType;
+	onChange: (value: string) => void;
+};
 
 const TransactionCategoryPicker = ({ type, onChange }: Props) => {
-	const [open, setOpen] = useState(false)
-	const [value, setValue] = useState('')
+	const [open, setOpen] = useState(false);
+	const [value, setValue] = useState('');
 
 	useEffect(() => {
-		if (!value) return
-		onChange(value)
-	}, [onChange, value])
+		if (!value) return;
+		onChange(value);
+	}, [onChange, value]);
 
-	const { transactionCategories, isLoading } = useGetTransactionCategories(type)
+	const { transactionCategories, isLoading } =
+		useGetTransactionCategories(type);
 
-	isLoading && <Spinner />
+	isLoading && <Spinner />;
 
 	const selectedCategory = transactionCategories?.find(
 		(category: TransactionCategory) => category.name === value,
-	)
+	);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -58,7 +59,7 @@ const TransactionCategoryPicker = ({ type, onChange }: Props) => {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className='w-[200px] p-0'>
-				<Command onSubmit={e => e.preventDefault()}>
+				<Command onSubmit={(e) => e.preventDefault()}>
 					<CommandInput placeholder='Search category...' />
 					<CreateCategoryDialog type={type} />
 					<CommandEmpty>
@@ -74,7 +75,7 @@ const TransactionCategoryPicker = ({ type, onChange }: Props) => {
 									<CommandItem
 										key={category.name}
 										onSelect={() => {
-											setValue(category.name), setOpen(prev => !prev)
+											setValue(category.name), setOpen((prev) => !prev);
 										}}
 									>
 										<CategoryRow category={category} />
@@ -91,10 +92,10 @@ const TransactionCategoryPicker = ({ type, onChange }: Props) => {
 				</Command>
 			</PopoverContent>
 		</Popover>
-	)
-}
+	);
+};
 
-export default TransactionCategoryPicker
+export default TransactionCategoryPicker;
 
 function CategoryRow({ category }: { category: TransactionCategory }) {
 	return (
@@ -102,5 +103,5 @@ function CategoryRow({ category }: { category: TransactionCategory }) {
 			<span role='img'>{category.icon}</span>
 			<span>{category.name}</span>
 		</div>
-	)
+	);
 }

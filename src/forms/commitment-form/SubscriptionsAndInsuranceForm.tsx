@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import {
 	Form,
 	FormControl,
@@ -6,19 +6,19 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/components/ui/select'
-import { CommitmentType, NewCommitment } from '@/types'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+} from '@/components/ui/select';
+import { CommitmentType, NewCommitment } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const FormSchema = z.object({
 	name: z
@@ -33,15 +33,15 @@ const FormSchema = z.object({
 	fee: z.coerce.number().positive().multipleOf(0.01),
 	commitmentStart: z.coerce.date(),
 	commitmentEnds: z.coerce.date().optional(),
-})
+});
 
-type SubscriptionsAndInsuranceFormData = z.infer<typeof FormSchema>
+type SubscriptionsAndInsuranceFormData = z.infer<typeof FormSchema>;
 
 type Props = {
-	commitmentType: CommitmentType
-	onSave: (commitmentData: NewCommitment) => void
-	isLoading: boolean
-}
+	commitmentType: CommitmentType;
+	onSave: (commitmentData: NewCommitment) => void;
+	isLoading: boolean;
+};
 
 const SubscriptionsAndInsuranceForm = ({
 	commitmentType,
@@ -50,14 +50,14 @@ const SubscriptionsAndInsuranceForm = ({
 }: Props) => {
 	const form = useForm<SubscriptionsAndInsuranceFormData>({
 		resolver: zodResolver(FormSchema),
-	})
+	});
 
-	const { control, handleSubmit } = form
-	const currentDate = new Date().toISOString().split('T')[0]
+	const { control, handleSubmit } = form;
+	const currentDate = new Date().toISOString().split('T')[0];
 
 	function onSubmit(data: SubscriptionsAndInsuranceFormData) {
-		const newCommitmentData = Object.assign({ type: commitmentType }, data)
-		onSave(newCommitmentData)
+		const newCommitmentData = Object.assign({ type: commitmentType }, data);
+		onSave(newCommitmentData);
 	}
 
 	return (
@@ -149,7 +149,7 @@ const SubscriptionsAndInsuranceForm = ({
 				</Button>
 			</form>
 		</Form>
-	)
-}
+	);
+};
 
-export default SubscriptionsAndInsuranceForm
+export default SubscriptionsAndInsuranceForm;
