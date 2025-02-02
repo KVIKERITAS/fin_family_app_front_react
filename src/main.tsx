@@ -1,11 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { BrowserRouter as Router } from 'react-router-dom'
-import AppRoutes from './AppRoutes'
-import Auth0ProviderWithNavigate from './auth/Auth0ProviderWithNavigate'
-import { Toaster } from './components/ui/sonner'
-import './global.css'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './AppRoutes';
+import Auth0ProviderWithNavigate from './auth/Auth0ProviderWithNavigate';
+import { Toaster } from './components/ui/sonner';
+import './global.css';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -13,7 +13,7 @@ const queryClient = new QueryClient({
 			refetchOnWindowFocus: false,
 		},
 	},
-})
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
@@ -31,4 +31,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 			</QueryClientProvider>
 		</Router>
 	</React.StrictMode>,
-)
+);

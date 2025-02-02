@@ -1,16 +1,22 @@
-import SingleCommitmentCard from '@/components/CommitmentsComponents/SingleCommitmentCard'
-import UpperBanner from '@/components/CommitmentsComponents/UpperBanner'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import SingleCommitmentCard from '@/components/CommitmentsComponents/SingleCommitmentCard';
+import UpperBanner from '@/components/CommitmentsComponents/UpperBanner';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-import { ChevronsUpDown } from 'lucide-react'
+} from '@/components/ui/collapsible';
+import { ChevronsUpDown } from 'lucide-react';
 
-const timePeriods = ['This Year', 'This Quarter', 'This Month']
-const commitmentTypes = ['Subscriptions', 'Leasing', 'Debts', 'Mortgage', 'Insurance']
+const timePeriods = ['This Year', 'This Quarter', 'This Month'];
+const commitmentTypes = [
+	'Subscriptions',
+	'Leasing',
+	'Debts',
+	'Mortgage',
+	'Insurance',
+];
 
 const CollapsibleProject = ({ projectNumber, commitmentType, details }) => (
 	<Collapsible className='w-full container'>
@@ -24,11 +30,11 @@ const CollapsibleProject = ({ projectNumber, commitmentType, details }) => (
 				</div>
 			</CollapsibleTrigger>
 			<CollapsibleContent className='py-2 flex justify-start'>
-				<SingleCommitmentCard  commitmentInfo={details} />
+				<SingleCommitmentCard commitmentInfo={details} />
 			</CollapsibleContent>
 		</Card>
 	</Collapsible>
-)
+);
 
 const CommitmentsPage = () => {
 	return (
@@ -36,7 +42,7 @@ const CommitmentsPage = () => {
 			<UpperBanner />
 			<div className='flex flex-col items-center space-y-4 my-4'>
 				<div className='flex justify-center space-x-4'>
-					{timePeriods.map(period => (
+					{timePeriods.map((period) => (
 						<Button
 							key={period}
 							variant='outline'
@@ -71,7 +77,7 @@ const CommitmentsPage = () => {
 				</div>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default CommitmentsPage
+export default CommitmentsPage;

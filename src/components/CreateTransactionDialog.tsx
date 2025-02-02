@@ -1,19 +1,19 @@
-import TransactionForm from '@/forms/transaction-from/TransactionForm'
-import { cn } from '@/lib/utils'
+import TransactionForm from '@/forms/transaction-from/TransactionForm';
+import { cn } from '@/lib/utils';
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from './ui/dialog'
+} from './ui/dialog';
 
-export type TransactionType = 'income' | 'expense'
+export type TransactionType = 'income' | 'expense';
 
 type Props = {
-	trigger: React.ReactNode
-	type: TransactionType
-}
+	trigger: React.ReactNode;
+	type: TransactionType;
+};
 
 const CreateTransactionDialog = ({ trigger, type }: Props) => {
 	return (
@@ -37,7 +37,7 @@ const CreateTransactionDialog = ({ trigger, type }: Props) => {
 				<TransactionForm type={type} />
 			</DialogContent>
 		</Dialog>
-	)
-}
+	);
+};
 
-export default CreateTransactionDialog
+export default CreateTransactionDialog;

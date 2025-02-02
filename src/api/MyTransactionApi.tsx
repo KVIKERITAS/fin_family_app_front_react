@@ -1,18 +1,18 @@
-import { TransactionType } from '@/components/CreateTransactionDialog'
-import { TransactionCategory } from '@/types'
-import { useAuth0 } from '@auth0/auth0-react'
-import { useMutation, useQuery } from 'react-query'
-import { toast } from 'sonner'
+import { TransactionType } from '@/components/CreateTransactionDialog';
+import { TransactionCategory } from '@/types';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useMutation, useQuery } from 'react-query';
+import { toast } from 'sonner';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useGetTransactionCategories = (
 	transactionType: TransactionType,
 ) => {
-	const { getAccessTokenSilently } = useAuth0()
+	const { getAccessTokenSilently } = useAuth0();
 
 	const getTransactionCategories = async () => {
-		const accessToken = await getAccessTokenSilently()
+		const accessToken = await getAccessTokenSilently();
 
 		const response = await fetch(
 			`${API_BASE_URL}/api/my/transaction/category/${transactionType}`,
@@ -23,33 +23,33 @@ export const useGetTransactionCategories = (
 					'Content-Type': 'application/json',
 				},
 			},
-		)
+		);
 
-		if (!response.ok) throw new Error('Failed to get transaction categories')
+		if (!response.ok) throw new Error('Failed to get transaction categories');
 
-		return response.json()
-	}
+		return response.json();
+	};
 
 	const {
 		data: transactionCategories,
 		isLoading,
 		error,
-	} = useQuery('fetchTransactionCategories', getTransactionCategories)
+	} = useQuery('fetchTransactionCategories', getTransactionCategories);
 
-	if (error) toast.error(error.toString())
+	if (error) toast.error(error.toString());
 
-	return { transactionCategories, isLoading }
-}
+	return { transactionCategories, isLoading };
+};
 
 export const useCreateTransactionCategory = () => {
-	const { getAccessTokenSilently } = useAuth0()
+	const { getAccessTokenSilently } = useAuth0();
 
 	const createTransactionCategoryRequest = async (
 		formData: TransactionCategory,
 	) => {
-		const accessToken = await getAccessTokenSilently()
+		const accessToken = await getAccessTokenSilently();
 
-		console.log(formData)
+		console.log(formData);
 
 		const response = await fetch(
 			`${API_BASE_URL}/api/my/transaction/category`,
@@ -61,12 +61,12 @@ export const useCreateTransactionCategory = () => {
 				},
 				body: JSON.stringify(formData),
 			},
-		)
+		);
 
-		if (!response.ok) throw new Error('Failed to create category')
+		if (!response.ok) throw new Error('Failed to create category');
 
-		return response.json()
-	}
+		return response.json();
+	};
 
 	const {
 		mutateAsync: createTransactionCategory,
@@ -74,17 +74,17 @@ export const useCreateTransactionCategory = () => {
 		isSuccess,
 		error,
 		reset,
-	} = useMutation(createTransactionCategoryRequest)
+	} = useMutation(createTransactionCategoryRequest);
 
 	if (isSuccess) {
-		toast.success('Category created!')
-		reset()
+		toast.success('Category created!');
+		reset();
 	}
 
 	if (error) {
-		toast.error(error.toString())
-		reset()
+		toast.error(error.toString());
+		reset();
 	}
 
-	return { createTransactionCategory, isLoading }
-}
+	return { createTransactionCategory, isLoading };
+};

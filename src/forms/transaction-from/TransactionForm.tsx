@@ -1,4 +1,4 @@
-import { TransactionType } from '@/components/CreateTransactionDialog'
+import { TransactionType } from '@/components/CreateTransactionDialog';
 import {
 	Form,
 	FormControl,
@@ -6,13 +6,13 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import TransactionCategoryPicker from './TransactionCategoryPicker'
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import TransactionCategoryPicker from './TransactionCategoryPicker';
 
 const formSchema = z.object({
 	amount: z.coerce.number().positive().multipleOf(0.01),
@@ -20,15 +20,15 @@ const formSchema = z.object({
 	date: z.coerce.date(),
 	category: z.string(),
 	type: z.union([z.literal('income'), z.literal('expense')]),
-})
+});
 
-type TransactionFormData = z.infer<typeof formSchema>
+type TransactionFormData = z.infer<typeof formSchema>;
 
 type Props = {
-	onSave: (transactionData: TransactionFormData) => void
-	isLoading: boolean
-	type: TransactionType
-}
+	onSave: (transactionData: TransactionFormData) => void;
+	isLoading: boolean;
+	type: TransactionType;
+};
 
 const TransactionForm = ({ onSave, isLoading, type }: Props) => {
 	const form = useForm<TransactionFormData>({
@@ -37,14 +37,14 @@ const TransactionForm = ({ onSave, isLoading, type }: Props) => {
 			type,
 			date: new Date(),
 		},
-	})
+	});
 
 	const handleCategoryChange = useCallback(
 		(value: string) => {
-			form.setValue('category', value)
+			form.setValue('category', value);
 		},
 		[form],
-	)
+	);
 
 	return (
 		<Form {...form}>
@@ -100,7 +100,7 @@ const TransactionForm = ({ onSave, isLoading, type }: Props) => {
 				</div>
 			</form>
 		</Form>
-	)
-}
+	);
+};
 
-export default TransactionForm
+export default TransactionForm;

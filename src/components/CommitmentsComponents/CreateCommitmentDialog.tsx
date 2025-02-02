@@ -11,8 +11,8 @@ import { useCreateCommitment } from '@/api/MyCommitmentsApi';
 import { NewCommitment } from '@/types';
 
 type Props = {
-	trigger: React.ReactNode
-}
+	trigger: React.ReactNode;
+};
 
 const CreateCommitmentDialog = ({ trigger }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -24,10 +24,10 @@ const CreateCommitmentDialog = ({ trigger }: Props) => {
 			if (res && res.ok) {
 				setIsOpen(false);
 			} else {
-				console.error("Failed to create commitment:", res);
+				console.error('Failed to create commitment:', res);
 			}
 		} catch (error) {
-			console.error("An error occurred while creating commitment:", error);
+			console.error('An error occurred while creating commitment:', error);
 		}
 	}
 
@@ -40,10 +40,13 @@ const CreateCommitmentDialog = ({ trigger }: Props) => {
 				<DialogHeader>
 					<DialogTitle>Create a new commitment</DialogTitle>
 				</DialogHeader>
-				<CommitmentForm onCommitmentSave={onCommitmentSave} isLoading={isLoading} />
+				<CommitmentForm
+					onCommitmentSave={onCommitmentSave}
+					isLoading={isLoading}
+				/>
 			</DialogContent>
 		</Dialog>
-	)
-}
+	);
+};
 
 export default CreateCommitmentDialog;

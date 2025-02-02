@@ -1,5 +1,5 @@
-import { TrendingDown, TrendingUp, Wallet } from 'lucide-react'
-import { Card } from './ui/card'
+import { TrendingDown, TrendingUp, Wallet } from 'lucide-react';
+import { Card } from './ui/card';
 
 const StatsCard = () => {
 	return (
@@ -28,7 +28,7 @@ const StatsCard = () => {
 				</div>
 			</Card>
 		</div>
-	)
-}
+	);
+};
 
-export default StatsCard
+export default StatsCard;
