@@ -65,7 +65,7 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 	const initialPayment = watch('initialPayment') || 0;
 	const commitmentEnds = watch('commitmentEnds');
 	const commitmentStart = watch('commitmentStart');
-	const fieldForInput = watch('fieldForInput');
+	const fieldForInput = watch('fieldForInput');	// 'fee' || 'commitment_end'
 	const fee = watch('fee');
 
 	const [errorMsgForFee, setErrorMsgForFee] = useState('');
@@ -294,10 +294,8 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 									onValueChange={(value) => {
 										field.onChange(value);
 										if (value === 'one_payment') {
-											setValue('fieldForInput', 'one_payment');
-										} else if (fieldForInput === 'one_payment') {
-											setValue('fieldForInput', '');
-										}
+											setValue('fieldForInput', 'commitment_end');
+										} 
 									}}
 									defaultValue={field.value}
 								>
@@ -326,21 +324,6 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Payment Start</FormLabel>
-									<FormControl>
-										<Input type='date' {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					)}
-					{feeType === 'one_payment' && (
-						<FormField
-							control={control}
-							name='commitmentEnds'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Commitment End</FormLabel>
 									<FormControl>
 										<Input type='date' {...field} />
 									</FormControl>
@@ -386,7 +369,7 @@ const LeasingAndDebtsForm = ({ commitmentType, onSave, isLoading }: Props) => {
 							)}
 						/>
 					)}
-					{feeType !== 'one_payment' && fieldForInput === 'commitment_end' && (
+					{ fieldForInput === 'commitment_end' && (
 						<>
 							<FormField
 								control={control}
